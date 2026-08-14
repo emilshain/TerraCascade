@@ -1,19 +1,27 @@
 # End-to-End Integration Checklist Results
 
-**Status: BLOCKED — not yet run.** This requires a running backend and frontend. No application code exists in the repo yet (only `README.md`). Ping the Product Research + Integration lead to run this pass as soon as both are up — I can run it live against a dev server the moment one exists; ask me to start backend/frontend and I will.
+**Status: RUN — 2026-08-14**, against `frontend/` (Next.js 16.3.1, Turbopack). Method: `npm install` → `npm run build` (clean, TypeScript passes, all 7 routes prerender statically) → `npm run start -- -p 4173` → `curl` each route and grep rendered HTML for required text. Two items (override reason, map tooltip) needed a source-code check instead of curl evidence, because they only render after client-side interaction/hydration — noted explicitly below, not glossed over.
 
-## Checklist (run against the live app)
+## Results
 
 | # | Check | Result | Evidence |
 |---|---|---|---|
-| 1 | Event source and limitation label visible on the active flood hazard | not run | |
-| 2 | Every action has owner, status, and EAP/protocol citation | not run | |
-| 3 | Every override requires a reason and appears in the timeline | not run | |
-| 4 | Flood-extent layer visibly states it's a pre-computed foundation-model output, not a live satellite feed | not run | |
-| 5 | Map legend separates verified information from assumptions | not run | |
-| 6 | Budget results show both selected and excluded projects with the reason | not run | |
-| 7 | Alert composer clearly says "draft for authorised publication" | not run | |
-| 8 | No screen claims live government integration, autonomous evacuation, gate control, or any landslide capability | not run | |
+| 1 | Event source and limitation label visible on the active flood hazard | **PASS** | `curl http://localhost:4173/` renders `Prithvi-100M-sen1floods11`, `verified-demo`, and a "Limitations" block (`HazardSummaryCard.tsx`) directly in the initial HTML. |
+| 2 | Every action has owner, status, and EAP/protocol citation | **PASS** | `curl http://localhost:4173/actions` (default EAP state = orange) shows 3 actions, each with "Owner: KSEB + District EOC", "Approver: KSEB EPM / authorised chain", a `StatusBadge`, and a "Idamalayar EAP — protocol citation" drawer (`ActionCard.tsx` + `ProtocolDrawer.tsx`). |
+| 3 | Every override requires a reason and appears in the timeline | **PASS (code-verified, not curl-verified)** | `OverrideModal.tsx` disables submit unless `reason.trim()` is non-empty (`required` textarea + `disabled={!reason.trim()}` on the submit button); `demo-store.tsx`'s `overrideAction()` pushes an `AuditEntry` with `eventType: "override"` and the typed `reason` on every call. This is a client interaction (modal opens on click) so it isn't present in the static curl'd HTML — confirmed by reading the code path instead. |
+| 4 | Flood-extent layer visibly states it's a pre-computed foundation-model output, not a live satellite feed | **PASS (code-verified, not curl-verified)** | `ImpactMapClient.tsx:113` binds a Leaflet tooltip: `` `${hazard.source.model} flood extent — ${hazard.status}, single-timestamp, not a live feed` ``. The map component is client-rendered only (`dynamic(..., {ssr: false})`), so this text is created by Leaflet at runtime and doesn't appear in curl'd static HTML — confirmed by reading `ImpactMapClient.tsx` instead. The `/map` page's static HTML does independently show "No basemap tiles are fetched — this view is fully offline" and the `ProvenanceTag` ("Prithvi-100M-sen1floods11, Sentinel-2, [date]"). |
+| 5 | Map legend separates verified information from assumptions | **PASS** | `curl http://localhost:4173/map` renders "ViT-derived flood extent (pre-computed)", a "Assets — verified" section, and a separate "Assets — scenario assumption" section (`MapLegend.tsx`). |
+| 6 | Budget results show both selected and excluded projects with the reason | **PASS** | `curl http://localhost:4173/budget` renders "Selected (N)" and "Excluded (N)" sections; excluded rows render "Excluded: Lower benefit-per-lakh than the selected portfolio at this budget — would displace a higher-value project." (from `exclusionReason()` in `lib/knapsack.ts`, rendered by `BudgetProjectRow.tsx`). |
+| 7 | Alert composer clearly says "draft for authorised publication" | **PASS** | `curl http://localhost:4173/alerts` renders "Draft for authorised publication — not sent" (banner) and "TerraCascade never sends an alert — only a Collector or authorised communicator can approve one" (page description). |
+| 8 | No screen claims live government integration, autonomous evacuation, gate control, or any landslide capability | **PASS, with one caught-and-flagged exception** | Grepped rendered HTML for all 7 routes for "live"/"real-time"/"landslide". No landslide references anywhere. One genuine wording issue found and logged separately: `frontend/app/cascade/page.tsx:15` calls resource-readiness data "live" when it's fixture/demo data — see `qa/claim_audit_findings.md` finding #1. Everything else is a correct negation ("not a live feed", "No live feed, no dispatched alerts", etc.). No autonomous-evacuation or gate-control claims found anywhere — every evacuation/alert/release action is explicitly a recommendation requiring named human sign-off. |
 
-## Owner notes
-This is the last gate before demo day — do not skip it even under time pressure. Every "not run" row above must become pass/fail with evidence before presenting to judges.
+## Overall
+7 of 8 checks pass cleanly; 1 check (#8) passes with a single one-line wording fix outstanding, already logged in `qa/claim_audit_findings.md` for the Frontend owner to apply before demo day.
+
+## What this pass does NOT cover
+- No browser/visual confirmation (no screenshot tool available in this session) — evidence above is from build output, rendered HTML, and source-code reads, not a human eyeballing the UI. Recommend a human click-through pass (see `docs/FALLBACK_DEMO_SCRIPT.md`) before the actual demo.
+- Role-switching, EAP-state-switching, and the override/approve interactions themselves were verified by reading the client-side logic (`demo-store.tsx`), not by driving the UI — no browser automation tool was available in this session.
+- `next dev`'s Turbopack workspace-root warning ("ignored package-lock.json … outside the current Git repository") appeared during build/start — harmless (an artifact of the frontend living in a subdirectory of a repo whose root has no lockfile), but worth setting `turbopack.root` in `next.config.ts` to silence it if it bothers CI later.
+
+## Cleanup note
+A `next start` server was left running on `localhost:4173` in the background for this check. Not part of the demo setup — stop it before demo day (or ignore; it doesn't touch anything you'll present with, since the real demo presumably uses `npm run dev` or a deployed instance).
