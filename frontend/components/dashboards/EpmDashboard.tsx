@@ -1,0 +1,45 @@
+"use client";
+
+import { useDemoStore } from "@/lib/store/demo-store";
+import { HAZARD_EVENTS } from "@/lib/fixtures/hazard";
+import { HazardSummaryCard } from "@/components/overview/HazardSummaryCard";
+import { ActionStats } from "@/components/overview/ActionStats";
+import { AttentionActionsList } from "@/components/overview/AttentionActionsList";
+import { ActionCard } from "@/components/actions/ActionCard";
+
+export function EpmDashboard() {
+  const { eapState, actions, role, advanceAction, overrideAction } = useDemoStore();
+  const hazard = HAZARD_EVENTS[eapState];
+  const stateActions = actions.filter((a) => a.eapState === eapState);
+
+  return (
+    <div className="flex flex-col gap-6">
+      <div>
+        <p className="mb-2 text-xs font-extrabold uppercase tracking-wide text-gray-400">
+          Active EAP state
+        </p>
+        <HazardSummaryCard hazard={hazard} />
+      </div>
+
+      <ActionStats actions={stateActions} />
+      <AttentionActionsList actions={stateActions} />
+
+      <section className="flex flex-col gap-4">
+        <h2 className="text-sm font-extrabold uppercase tracking-wide text-gray-500">
+          Interactive EAP action board
+        </h2>
+        <div className="flex flex-col gap-4">
+          {stateActions.map((action) => (
+            <ActionCard
+              key={action.id}
+              action={action}
+              role={role}
+              onAdvance={advanceAction}
+              onOverride={overrideAction}
+            />
+          ))}
+        </div>
+      </section>
+    </div>
+  );
+}

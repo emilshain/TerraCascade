@@ -7,19 +7,24 @@ export type EapState = "blue" | "orange" | "red";
 export type Role =
   | "kseb_epm"
   | "district_eoc"
-  | "district_authority"
-  | "public_observer";
+  | "district_collector"
+  | "budget_planner";
 
 export interface RoleDefinition {
   id: Role;
   label: string;
   shortLabel: string;
   description: string;
-  /** Sections this role may see beyond the shared baseline. */
-  canSeeRestricted: boolean;
+  focus: string;
 }
 
 export type DataStatus = "verified-demo" | "demo scenario assumption";
+
+export type EpistemicStatus =
+  | "official_rule_curve"
+  | "demo_simulation"
+  | "vit_model_output"
+  | "needs_verification";
 
 export interface ProtocolSource {
   document: string;
@@ -79,16 +84,18 @@ export interface ActionItem {
   attentionRequired: boolean;
   createdAt: string;
   updatedAt: string;
-  restricted: boolean;
 }
 
 export type MapAssetType =
   | "hospital"
   | "shelter"
   | "road"
-  | "critical_asset";
+  | "critical_asset"
+  | "bridge";
 
 export type AssetPriority = "P1" | "P2" | "P3";
+
+export type BridgeSubmersionStatus = "normal" | "inundated" | "submerged";
 
 export interface MapAsset {
   id: string;
@@ -101,6 +108,16 @@ export interface MapAsset {
   path?: [number, number][];
   blocked?: boolean;
   rationale: string;
+  /** Bridge markers only. */
+  code?: string;
+  submersionStatus?: BridgeSubmersionStatus;
+  depthMeters?: number;
+  velocityMps?: number;
+  /** Shelter markers only. */
+  accessBlocked?: boolean;
+  deployNote?: string;
+  /** Shelter markers only — id of the road asset whose blocked state gates access. */
+  nearRoadId?: string;
 }
 
 export type CascadeRisk = "low" | "medium" | "high" | "critical";
@@ -114,9 +131,11 @@ export interface CascadeNode {
   status: CascadeStatus;
   dependsOn: string[];
   note: string;
+  metricLabel?: string;
+  metricValue?: string;
 }
 
-export type ResourceKind = "fuel" | "boat" | "generator" | "team";
+export type ResourceKind = "fuel" | "boat" | "generator" | "team" | "vehicle" | "shelter";
 
 export interface ResourcePool {
   id: string;
@@ -127,6 +146,7 @@ export interface ResourcePool {
   unit: string;
   location: string;
   status: DataStatus;
+  capacityPercent?: number;
 }
 
 export interface BudgetProject {
@@ -171,4 +191,6 @@ export interface AuditEntry {
   description: string;
   relatedActionId?: string;
   reason?: string;
+  validation: "verified" | "demo_override";
+  protocolTag?: string;
 }

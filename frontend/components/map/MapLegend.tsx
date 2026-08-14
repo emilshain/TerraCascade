@@ -29,37 +29,48 @@ function Swatch({ color, shape = "circle" }: { color: string; shape?: "circle" |
 export function MapLegend({ eapState }: { eapState: EapState }) {
   return (
     <div className="glass-card rounded-3xl p-4 text-xs">
-      <p className="text-[10px] font-extrabold uppercase tracking-wide text-gray-400">Legend</p>
+      <p className="text-[10px] font-extrabold uppercase tracking-wide text-gray-400">
+        Legend — by epistemic status
+      </p>
 
       <div className="mt-3 flex flex-col gap-2">
-        <p className="text-[10px] font-bold uppercase tracking-wide text-gray-400">Flood extent</p>
+        <p className="text-[10px] font-bold uppercase tracking-wide text-gray-400">
+          🛰️ Hydrological layer (pre-computed ViT)
+        </p>
         <div className="flex items-center gap-2 font-semibold text-gray-700">
           <Swatch color={SEVERITY_COLOR[eapState]} shape="square" />
-          ViT-derived flood extent (pre-computed) — {eapState} state
+          ViT-derived flood extent — {eapState} state
         </div>
       </div>
 
       <div className="mt-3 flex flex-col gap-2 border-t border-gray-100 pt-3">
-        <p className="text-[10px] font-bold uppercase tracking-wide text-gray-400">Assets — verified</p>
+        <p className="text-[10px] font-bold uppercase tracking-wide text-gray-400">
+          🏷️ Verified physical assets (ground truth)
+        </p>
         <div className="flex items-center gap-2 font-semibold text-gray-700">
-          <Swatch color="#2563eb" /> Critical asset (named EAP structure)
+          <Swatch color="#2563eb" /> Reservoir / regulator (named EAP structure)
+        </div>
+        <div className="flex items-center gap-2 font-semibold text-gray-700">
+          <Swatch color="#0891b2" /> Bridge (submersion status — cyan/orange/red by depth)
         </div>
       </div>
 
       <div className="mt-3 flex flex-col gap-2 border-t border-gray-100 pt-3">
-        <p className="text-[10px] font-bold uppercase tracking-wide text-gray-400">Assets — scenario assumption</p>
+        <p className="text-[10px] font-bold uppercase tracking-wide text-gray-400">
+          🧪 Assumed / scenario assets (demo assumptions)
+        </p>
         <div className="flex items-center gap-2 font-semibold text-gray-700">
           <Swatch color="#dc2626" /> Hospital (illustrative placement)
         </div>
         <div className="flex items-center gap-2 font-semibold text-gray-700">
-          <Swatch color="#059669" /> Shelter (illustrative placement)
+          <Swatch color="#059669" /> Shelter (dashed red ring = access road blocked)
         </div>
       </div>
 
       <div className="mt-3 flex flex-col gap-2 border-t border-gray-100 pt-3">
         <p className="text-[10px] font-bold uppercase tracking-wide text-gray-400">Routes</p>
         <div className="flex items-center gap-2 font-semibold text-gray-700">
-          <Swatch color="#dc2626" shape="dashed" /> Blocked (modeled)
+          <Swatch color="#dc2626" shape="dashed" /> Blocked (EOC route-blocker control)
         </div>
         <div className="flex items-center gap-2 font-semibold text-gray-700">
           <Swatch color="#64748b" shape="line" /> Open

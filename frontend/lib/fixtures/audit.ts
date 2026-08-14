@@ -8,6 +8,7 @@ export const INITIAL_AUDIT_LOG: AuditEntry[] = [
     eventType: "source_received",
     description:
       "Prithvi-100M-sen1floods11 inference received for scene S2B_MSIL2A_20260602T045701_Idamalayar (Blue state).",
+    validation: "verified",
   },
   {
     id: "audit-2",
@@ -15,14 +16,18 @@ export const INITIAL_AUDIT_LOG: AuditEntry[] = [
     actorRole: "kseb_epm",
     eventType: "action_created",
     description: "Blue-state actions drafted from the Idamalayar EAP Alert Level 1 checklist.",
+    validation: "verified",
+    protocolTag: "Idamalayar EAP - Alert Level 1 / Blue",
   },
   {
     id: "audit-3",
     timestamp: "2026-06-02T05:32:00+05:30",
     actorRole: "kseb_epm",
     eventType: "acknowledgement",
-    description: "Flood-extent layer display action marked complete.",
+    description: "Catchment/rain-gauge monitoring action marked complete.",
     relatedActionId: "act-blue-1",
+    validation: "verified",
+    protocolTag: "Idamalayar EAP - Alert Level 1 / Blue",
   },
   {
     id: "audit-4",
@@ -31,6 +36,7 @@ export const INITIAL_AUDIT_LOG: AuditEntry[] = [
     eventType: "source_received",
     description:
       "Prithvi-100M-sen1floods11 inference received for scene S2A_MSIL2A_20260714T045659_Idamalayar (Orange state).",
+    validation: "verified",
   },
   {
     id: "audit-5",
@@ -38,6 +44,8 @@ export const INITIAL_AUDIT_LOG: AuditEntry[] = [
     actorRole: "district_eoc",
     eventType: "action_created",
     description: "Orange-state coordination actions drafted from the Idamalayar EAP Alert Level 2 checklist.",
+    validation: "verified",
+    protocolTag: "Idamalayar EAP - Alert Level 2 / Orange",
   },
   {
     id: "audit-6",
@@ -49,6 +57,8 @@ export const INITIAL_AUDIT_LOG: AuditEntry[] = [
     relatedActionId: "act-orange-1",
     reason:
       "Manual override: District EOC field liaison confirmed rising inflow by phone ahead of the next scheduled review.",
+    validation: "demo_override",
+    protocolTag: "Idamalayar EAP - Alert Level 2 / Orange",
   },
   {
     id: "audit-7",
@@ -57,27 +67,34 @@ export const INITIAL_AUDIT_LOG: AuditEntry[] = [
     eventType: "source_received",
     description:
       "Prithvi-100M-sen1floods11 inference received for scene S2B_MSIL2A_20260809T045701_Idamalayar (Red state).",
+    validation: "verified",
   },
   {
     id: "audit-8",
     timestamp: "2026-08-09T19:10:00+05:30",
-    actorRole: "district_authority",
+    actorRole: "district_collector",
     eventType: "action_created",
     description: "Red-state escalation actions drafted from the Idamalayar EAP Alert Level 3 checklist.",
+    validation: "verified",
+    protocolTag: "Idamalayar EAP - Alert Level 3 / Red",
   },
   {
     id: "audit-9",
     timestamp: "2026-08-09T19:15:00+05:30",
-    actorRole: "district_authority",
+    actorRole: "district_collector",
     eventType: "alert_drafted",
     description: "Bilingual public-alert draft generated for the Red-state affected zone. Not published.",
+    validation: "demo_override",
+    protocolTag: "Idamalayar EAP - Alert Level 3 / Red",
   },
   {
     id: "audit-10",
     timestamp: "2026-08-09T19:32:00+05:30",
-    actorRole: "district_authority",
+    actorRole: "district_collector",
     eventType: "acknowledgement",
-    description: "Red-state scenario escalation acknowledged by District Authority.",
+    description: "Red-state scenario escalation acknowledged by District Collector.",
     relatedActionId: "act-red-3",
+    validation: "verified",
+    protocolTag: "Idamalayar EAP - Alert Level 3 / Red",
   },
 ];

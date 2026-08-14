@@ -30,9 +30,9 @@ export const ACTIONS: ActionItem[] = [
   {
     id: "act-blue-1",
     eapState: "blue",
-    title: "Display flood-extent layer for the configured watch scenario",
+    title: "AE Susamma: Initiate hourly monitoring of catchments and private upstream rain gauges",
     description:
-      "Surface the flood-extent layer with its source/status/limitations label so the watch scenario is visible on the command overview and map.",
+      "Run the standing catchment/rain-gauge monitoring cycle for the watch scenario and surface the flood-extent layer with its source/status/limitations label on the command overview and map.",
     status: "complete",
     ownerRole: "KSEB EPM",
     approverRole: "KSEB EPM",
@@ -42,7 +42,6 @@ export const ACTIONS: ActionItem[] = [
     attentionRequired: false,
     createdAt: "2026-06-02T05:20:00+05:30",
     updatedAt: "2026-06-02T05:32:00+05:30",
-    restricted: false,
   },
   {
     id: "act-blue-2",
@@ -59,7 +58,6 @@ export const ACTIONS: ActionItem[] = [
     attentionRequired: false,
     createdAt: "2026-06-02T05:25:00+05:30",
     updatedAt: "2026-06-02T09:10:00+05:30",
-    restricted: false,
   },
   {
     id: "act-blue-3",
@@ -76,16 +74,15 @@ export const ACTIONS: ActionItem[] = [
     attentionRequired: false,
     createdAt: "2026-06-02T05:30:00+05:30",
     updatedAt: "2026-06-02T05:30:00+05:30",
-    restricted: true,
   },
 
   // Orange — eap-orange — owner: KSEB + District EOC / approver: KSEB EPM or authorised chain
   {
     id: "act-orange-1",
     eapState: "orange",
-    title: "Run impact review against the controlled-release scenario",
+    title: "EPM Biju P.N: Notify District Collectors of spillage levels under 300 m³/s",
     description:
-      "Review projected impact for the configured rule-curve / controlled-release scenario against assets downstream of the regulator.",
+      "Review projected impact for the configured rule-curve / controlled-release scenario and notify the District Collector's office of spillage levels, which remain under the 300 m³/s Red threshold.",
     status: "in_progress",
     ownerRole: "KSEB + District EOC",
     approverRole: "KSEB EPM / authorised chain",
@@ -95,7 +92,6 @@ export const ACTIONS: ActionItem[] = [
     attentionRequired: true,
     createdAt: "2026-07-14T11:50:00+05:30",
     updatedAt: "2026-07-14T13:05:00+05:30",
-    restricted: false,
   },
   {
     id: "act-orange-2",
@@ -112,7 +108,6 @@ export const ACTIONS: ActionItem[] = [
     attentionRequired: true,
     createdAt: "2026-07-14T12:00:00+05:30",
     updatedAt: "2026-07-14T12:00:00+05:30",
-    restricted: true,
   },
   {
     id: "act-orange-3",
@@ -129,18 +124,18 @@ export const ACTIONS: ActionItem[] = [
     attentionRequired: true,
     createdAt: "2026-07-14T12:10:00+05:30",
     updatedAt: "2026-07-14T12:10:00+05:30",
-    restricted: true,
   },
 
-  // Red — eap-red — owner: District Authority / approver: Collector or authorised communicator
+  // Red — eap-red — owner: District Collector / approver: Collector or authorised communicator
   {
     id: "act-red-1",
     eapState: "red",
-    title: "Immediate-evacuation recommendation for District Authority review",
+    title:
+      "Chief Engineer: Trigger automated warning sirens (less than 2-hour arrival zone) and generate evacuation recommendations",
     description:
-      "Recommend for approval: immediate evacuation of the mapped Red-state flood extent. Requires District Authority review before any downstream step proceeds.",
+      "Recommend for approval: sound the warning siren network for the sub-2-hour flood-arrival zone and generate the immediate-evacuation recommendation for the mapped Red-state flood extent. Requires District Collector review before any downstream step proceeds.",
     status: "pending_approval",
-    ownerRole: "District Authority",
+    ownerRole: "District Collector",
     approverRole: "Collector / authorised communicator",
     authorityBoundary:
       "Product drafts a recommendation and alert text only. Publication and any evacuation order require Collector or authorised-communicator sign-off. TerraCascade does not send alerts, order evacuations, or control gates.",
@@ -148,7 +143,6 @@ export const ACTIONS: ActionItem[] = [
     attentionRequired: true,
     createdAt: "2026-08-09T19:10:00+05:30",
     updatedAt: "2026-08-09T19:10:00+05:30",
-    restricted: true,
   },
   {
     id: "act-red-2",
@@ -157,7 +151,7 @@ export const ACTIONS: ActionItem[] = [
     description:
       "Generate the bilingual public-alert draft for the affected zone. Explicitly marked draft for authorised publication — see Alert Composer.",
     status: "drafted",
-    ownerRole: "District Authority",
+    ownerRole: "District Collector",
     approverRole: "Collector / authorised communicator",
     authorityBoundary:
       "Product drafts a recommendation and alert text only. Publication and any evacuation order require Collector or authorised-communicator sign-off. TerraCascade does not send alerts, order evacuations, or control gates.",
@@ -165,16 +159,15 @@ export const ACTIONS: ActionItem[] = [
     attentionRequired: true,
     createdAt: "2026-08-09T19:15:00+05:30",
     updatedAt: "2026-08-09T19:15:00+05:30",
-    restricted: false,
   },
   {
     id: "act-red-3",
     eapState: "red",
-    title: "Flag scenario for District Authority escalation",
+    title: "Flag scenario for District Collector escalation",
     description:
-      "Escalate the Red-state scenario to the District Authority and keep the override/approval trail visible on the audit timeline.",
+      "Escalate the Red-state scenario to the District Collector and keep the override/approval trail visible on the audit timeline.",
     status: "acknowledged",
-    ownerRole: "District Authority",
+    ownerRole: "District Collector",
     approverRole: "Collector / authorised communicator",
     authorityBoundary:
       "Product drafts a recommendation and alert text only. Publication and any evacuation order require Collector or authorised-communicator sign-off. TerraCascade does not send alerts, order evacuations, or control gates.",
@@ -182,7 +175,6 @@ export const ACTIONS: ActionItem[] = [
     attentionRequired: true,
     createdAt: "2026-08-09T19:20:00+05:30",
     updatedAt: "2026-08-09T19:32:00+05:30",
-    restricted: true,
   },
 ];
 

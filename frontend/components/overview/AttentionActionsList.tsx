@@ -1,11 +1,9 @@
-import Link from "next/link";
-import { ArrowRight } from "lucide-react";
-import type { ActionItem, Role } from "@/lib/types";
+import { AlertOctagon } from "lucide-react";
+import type { ActionItem } from "@/lib/types";
 import { GlassCard } from "@/components/shared/GlassCard";
 import { StatusBadge } from "@/components/shared/StatusBadge";
-import { RestrictedNote } from "@/components/shared/RestrictedNote";
 
-export function AttentionActionsList({ actions, role }: { actions: ActionItem[]; role: Role }) {
+export function AttentionActionsList({ actions }: { actions: ActionItem[] }) {
   const flagged = actions.filter((a) => a.attentionRequired && a.status !== "complete");
 
   if (flagged.length === 0) {
@@ -18,14 +16,10 @@ export function AttentionActionsList({ actions, role }: { actions: ActionItem[];
 
   return (
     <GlassCard className="flex flex-col gap-3">
-      <div className="flex items-center justify-between">
-        <h3 className="text-sm font-extrabold uppercase tracking-wide text-gray-500">
-          Needs attention
-        </h3>
-        <Link href="/actions" className="flex items-center gap-1 text-xs font-bold text-blue-600">
-          Open action board <ArrowRight className="h-3.5 w-3.5" aria-hidden />
-        </Link>
-      </div>
+      <h3 className="flex items-center gap-2 text-sm font-extrabold uppercase tracking-wide text-gray-500">
+        <AlertOctagon className="h-4 w-4 text-amber-600" aria-hidden />
+        Needs attention
+      </h3>
       <ul className="flex flex-col gap-2">
         {flagged.map((action) => (
           <li
@@ -33,16 +27,10 @@ export function AttentionActionsList({ actions, role }: { actions: ActionItem[];
             className="flex flex-wrap items-center justify-between gap-2 rounded-2xl bg-white/60 px-4 py-3"
           >
             <div className="min-w-0">
-              {action.restricted && role === "public_observer" ? (
-                <RestrictedNote label="Restricted action detail" />
-              ) : (
-                <>
-                  <p className="truncate text-sm font-bold text-gray-800">{action.title}</p>
-                  <p className="text-xs text-gray-500">
-                    Owner: {action.ownerRole} · Approver: {action.approverRole}
-                  </p>
-                </>
-              )}
+              <p className="truncate text-sm font-bold text-gray-800">{action.title}</p>
+              <p className="text-xs text-gray-500">
+                Owner: {action.ownerRole} · Approver: {action.approverRole}
+              </p>
             </div>
             <StatusBadge status={action.status} />
           </li>

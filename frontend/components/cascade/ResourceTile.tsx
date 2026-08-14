@@ -1,4 +1,4 @@
-import { Fuel, Ship, Zap, Users } from "lucide-react";
+import { Fuel, Ship, Truck, Zap, Users, Home } from "lucide-react";
 import type { ResourcePool } from "@/lib/types";
 import { GlassCard } from "@/components/shared/GlassCard";
 import { cn } from "@/lib/cn";
@@ -8,6 +8,8 @@ const ICON: Record<ResourcePool["kind"], typeof Fuel> = {
   boat: Ship,
   generator: Zap,
   team: Users,
+  vehicle: Truck,
+  shelter: Home,
 };
 
 export function ResourceTile({ resource }: { resource: ResourcePool }) {
@@ -44,6 +46,11 @@ export function ResourceTile({ resource }: { resource: ResourcePool }) {
         </div>
       </div>
 
+      {resource.capacityPercent !== undefined && (
+        <p className="text-[11px] font-bold text-gray-600">
+          Operating at {resource.capacityPercent}% capacity
+        </p>
+      )}
       <p className="text-[10px] font-semibold uppercase tracking-wide text-gray-400">{resource.status}</p>
     </GlassCard>
   );
