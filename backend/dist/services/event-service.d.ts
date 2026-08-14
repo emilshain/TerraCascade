@@ -1,3 +1,8 @@
+/**
+ * EventService manages flood scenario events using pre-computed
+ * Prithvi-100M-sen1floods11 inference outputs with status "verified-demo",
+ * "single-timestamp inference", and "not a live feed" limitations.
+ */
 import type { HazardEvent, EapSeverity } from "../types/index.js";
 export declare class EventService {
     private activeState;
