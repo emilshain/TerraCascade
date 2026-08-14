@@ -1,5 +1,14 @@
 {
   "$note": "PROVISIONAL SCHEMA. 01_BACKEND.md (which defines the canonical HazardEvent/Action TypeScript types) does not exist in the repo yet. Field names below are a best-effort guess at what a backend Action record needs. Once 01_BACKEND.md lands, reconcile field names/casing with the real HazardEvent/Action types and update this note.",
+  "$protocolResearch": {
+    "summary": "Researched 2026-08-14 via public web sources. The Blue/Internal, Orange/External-prepare, Red/External-evacuate three-tier structure used below is the documented national framework (CWC, Dam Rehabilitation and Improvement Project) that Kerala dam EAPs, including Idamalayar's, are built on. A site-specific 'Emergency Action Plan (Tier-I) – Idamalayar Dam' PDF (7.47 MB, posted 2020-06-03) is confirmed to exist on KSEB's dam-safety portal, but its internal section/clause numbers could not be retrieved (the portal's download control is JS-driven, not a fetchable static URL, and no URL was guessed per policy). Exact clause citations below remain 'agency validation required' until someone with portal access pulls the PDF directly.",
+    "sources": [
+      { "title": "Emergency Action Planning for Dams (CWC / DRIP, Ministry of Water Resources, 2016)", "url": "https://cwc.gov.in/sites/default/files/admin/2016%20Emergency%20Action%20Planning%20for%20Dams.pdf" },
+      { "title": "Emergency Action Plan — KSEB Dam Safety Organisation (downloads index, confirms Idamalayar Tier-I EAP exists)", "url": "https://dams.kseb.in/?p=399" },
+      { "title": "IDAMALAYAR DAM — KSEB Dam Safety Organisation (dam specifications: FRL 169.00 m, MWL 171.00 m, Ernakulam District)", "url": "https://dams.kseb.in/?p=89" },
+      { "title": "Dam Management — Kerala State Disaster Management Authority", "url": "https://sdma.kerala.gov.in/dam-management/" }
+    ]
+  },
   "$scope": "Flood only. No landslide states, triggers, or actions exist in this file by design (hard constraint).",
   "$doNotClaim": [
     "This file does not represent a live or predictive system.",
@@ -23,9 +32,10 @@
       "approverRole": "KSEB EPM",
       "authorityBoundary": "No external or public order may be issued at Blue. Product surfaces monitoring and an internal checklist only; it does not notify anyone outside KSEB.",
       "protocolSource": {
-        "document": "Idamalayar EAP",
-        "section": "Alert Level 1 / Blue (Watch) — exact section/clause number not yet verified against the source document",
-        "status": "agency validation required"
+        "document": "Emergency Action Plan (Tier-I) — Idamalayar Dam, KSEB Dam Safety Organisation (2020-06-03)",
+        "frameworkBasis": "National definition (CWC, Emergency Action Planning for Dams, 2016): 'Internal Alert for BLUE level emergency (monitor and repair)'",
+        "section": "Blue / Internal Alert — exact clause number within the Idamalayar-specific PDF not yet verified; only the national framework definition above is confirmed",
+        "status": "agency validation required for the dam-specific clause number; framework definition is source-confirmed"
       }
     },
     {
@@ -45,9 +55,10 @@
       "approverRole": "KSEB EPM / authorised chain",
       "authorityBoundary": "Product surfaces impact-review data and a readiness checklist only. EPM or the authorised chain decides any coordination or release action — TerraCascade does not decide or trigger releases.",
       "protocolSource": {
-        "document": "Idamalayar EAP",
-        "section": "Alert Level 2 / Orange (Warning) — exact section/clause number not yet verified against the source document",
-        "status": "agency validation required"
+        "document": "Emergency Action Plan (Tier-I) — Idamalayar Dam, KSEB Dam Safety Organisation (2020-06-03)",
+        "frameworkBasis": "National definition (CWC, Emergency Action Planning for Dams, 2016): 'External Alert for ORANGE (prepare to evacuate)'. In Kerala practice an Orange Alert is issued before opening dam shutters, ahead of a Red Alert to the public.",
+        "section": "Orange / External Alert (prepare to evacuate) — exact clause number within the Idamalayar-specific PDF not yet verified; only the national framework definition above is confirmed",
+        "status": "agency validation required for the dam-specific clause number; framework definition is source-confirmed"
       }
     },
     {
@@ -67,9 +78,10 @@
       "approverRole": "Collector / authorised communicator",
       "authorityBoundary": "Product drafts a recommendation and alert text only. Publication and any evacuation order require Collector or authorised-communicator sign-off. TerraCascade does not send alerts, order evacuations, or control gates.",
       "protocolSource": {
-        "document": "Idamalayar EAP",
-        "section": "Alert Level 3 / Red (Danger/Emergency) — exact section/clause number not yet verified against the source document",
-        "status": "agency validation required"
+        "document": "Emergency Action Plan (Tier-I) — Idamalayar Dam, KSEB Dam Safety Organisation (2020-06-03)",
+        "frameworkBasis": "National definition (CWC, Emergency Action Planning for Dams, 2016): 'External Alert for RED (evacuate immediately)'. In Kerala practice, Red Alert is the final public warning, issued after Orange.",
+        "section": "Red / External Alert (evacuate immediately) — exact clause number within the Idamalayar-specific PDF not yet verified; only the national framework definition above is confirmed",
+        "status": "agency validation required for the dam-specific clause number; framework definition is source-confirmed"
       }
     }
   ]
