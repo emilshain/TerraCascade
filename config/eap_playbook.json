@@ -1,0 +1,76 @@
+{
+  "$note": "PROVISIONAL SCHEMA. 01_BACKEND.md (which defines the canonical HazardEvent/Action TypeScript types) does not exist in the repo yet. Field names below are a best-effort guess at what a backend Action record needs. Once 01_BACKEND.md lands, reconcile field names/casing with the real HazardEvent/Action types and update this note.",
+  "$scope": "Flood only. No landslide states, triggers, or actions exist in this file by design (hard constraint).",
+  "$doNotClaim": [
+    "This file does not represent a live or predictive system.",
+    "No entry in this file authorizes TerraCascade to issue a public order, open a gate, or send an alert. Every 'red' action is a drafted recommendation for human authorisation."
+  ],
+  "playbook": [
+    {
+      "id": "eap-blue",
+      "state": "blue",
+      "label": "Blue flood/EAP state",
+      "trigger": {
+        "description": "Configured watch scenario",
+        "status": "demo scenario assumption"
+      },
+      "productAction": [
+        "Display flood-extent layer with source/status/limitations label for the configured watch scenario",
+        "Run internal inspection checklist (KSEB EPM)",
+        "Log internal-notification entry to EOC duty officer — no external or public communication"
+      ],
+      "ownerRole": "KSEB EPM",
+      "approverRole": "KSEB EPM",
+      "authorityBoundary": "No external or public order may be issued at Blue. Product surfaces monitoring and an internal checklist only; it does not notify anyone outside KSEB.",
+      "protocolSource": {
+        "document": "Idamalayar EAP",
+        "section": "Alert Level 1 / Blue (Watch) — exact section/clause number not yet verified against the source document",
+        "status": "agency validation required"
+      }
+    },
+    {
+      "id": "eap-orange",
+      "state": "orange",
+      "label": "Orange flood/EAP state",
+      "trigger": {
+        "description": "Rule-curve / controlled-release scenario",
+        "status": "demo scenario assumption"
+      },
+      "productAction": [
+        "Run impact review against the configured controlled-release scenario",
+        "Publish hourly internal update to KSEB and District EOC",
+        "Surface coordination-readiness checklist (contact lists, staging status) for review"
+      ],
+      "ownerRole": "KSEB + District EOC",
+      "approverRole": "KSEB EPM / authorised chain",
+      "authorityBoundary": "Product surfaces impact-review data and a readiness checklist only. EPM or the authorised chain decides any coordination or release action — TerraCascade does not decide or trigger releases.",
+      "protocolSource": {
+        "document": "Idamalayar EAP",
+        "section": "Alert Level 2 / Orange (Warning) — exact section/clause number not yet verified against the source document",
+        "status": "agency validation required"
+      }
+    },
+    {
+      "id": "eap-red",
+      "state": "red",
+      "label": "Red flood/EAP state",
+      "trigger": {
+        "description": "Large-release / failure scenario",
+        "status": "demo scenario assumption"
+      },
+      "productAction": [
+        "Generate an immediate-evacuation recommendation for District Authority review",
+        "Draft public-alert content marked 'draft for authorised publication'",
+        "Flag the scenario for District Authority escalation and log the override/approval trail"
+      ],
+      "ownerRole": "District Authority",
+      "approverRole": "Collector / authorised communicator",
+      "authorityBoundary": "Product drafts a recommendation and alert text only. Publication and any evacuation order require Collector or authorised-communicator sign-off. TerraCascade does not send alerts, order evacuations, or control gates.",
+      "protocolSource": {
+        "document": "Idamalayar EAP",
+        "section": "Alert Level 3 / Red (Danger/Emergency) — exact section/clause number not yet verified against the source document",
+        "status": "agency validation required"
+      }
+    }
+  ]
+}
