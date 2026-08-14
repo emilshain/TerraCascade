@@ -29,7 +29,7 @@ export function OverrideModal({
       <div className="glass-card w-full max-w-md rounded-3xl p-6">
         <div className="flex items-start justify-between gap-3">
           <div>
-            <p className="text-xs font-bold uppercase tracking-wide text-red-600">Manual override</p>
+            <p className="text-xs font-bold uppercase tracking-wide text-red-600">EAP Protocol Deviation</p>
             <h3 className="mt-1 text-base font-extrabold text-gray-900">{action.title}</h3>
           </div>
           <button type="button" onClick={onClose} aria-label="Close" className="rounded-full p-1 hover:bg-gray-100">
@@ -62,7 +62,7 @@ export function OverrideModal({
           </label>
 
           <label className="flex flex-col gap-1.5 text-xs font-bold text-gray-600">
-            Reason for override (required — appears on the audit timeline)
+            Enter legal/operational justification to persist change to immutable audit trail
             <textarea
               required
               value={reason}

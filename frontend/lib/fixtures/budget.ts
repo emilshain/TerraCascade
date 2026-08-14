@@ -4,7 +4,7 @@ export const BUDGET_PROJECTS: BudgetProject[] = [
   {
     id: "bp-regulator-automation",
     name: "Bhoothathankettu regulator gate-automation retrofit",
-    costLakhs: 120,
+    costLakhs: 960,
     populationBenefit: 42000,
     criticalityScore: 9.2,
     rationale:
@@ -16,7 +16,7 @@ export const BUDGET_PROJECTS: BudgetProject[] = [
   {
     id: "bp-siren-network",
     name: "Early-warning siren network, Periyar downstream panchayats",
-    costLakhs: 35,
+    costLakhs: 280,
     populationBenefit: 65000,
     criticalityScore: 8.8,
     rationale:
@@ -28,7 +28,7 @@ export const BUDGET_PROJECTS: BudgetProject[] = [
   {
     id: "bp-causeway-raising",
     name: "Kuttampuzha–Kothamangalam causeway raising",
-    costLakhs: 85,
+    costLakhs: 680,
     populationBenefit: 18000,
     criticalityScore: 7.5,
     rationale:
@@ -40,7 +40,7 @@ export const BUDGET_PROJECTS: BudgetProject[] = [
   {
     id: "bp-gauge-telemetry",
     name: "Real-time gauge telemetry, Idamalayar–Bhoothathankettu stretch",
-    costLakhs: 48,
+    costLakhs: 384,
     populationBenefit: 30000,
     criticalityScore: 7.9,
     rationale:
@@ -52,7 +52,7 @@ export const BUDGET_PROJECTS: BudgetProject[] = [
   {
     id: "bp-generator-bank",
     name: "Backup generator bank, Kothamangalam Taluk Hospital",
-    costLakhs: 26,
+    costLakhs: 208,
     populationBenefit: 15000,
     criticalityScore: 7.2,
     rationale:
@@ -64,7 +64,7 @@ export const BUDGET_PROJECTS: BudgetProject[] = [
   {
     id: "bp-boats-lifejackets",
     name: "Boat and lifejacket procurement, KSEB EPM disaster cell",
-    costLakhs: 18,
+    costLakhs: 144,
     populationBenefit: 12000,
     criticalityScore: 6.8,
     rationale:
@@ -76,7 +76,7 @@ export const BUDGET_PROJECTS: BudgetProject[] = [
   {
     id: "bp-pump-sets",
     name: "Portable pump sets, low-lying wards, Kothamangalam municipality",
-    costLakhs: 14,
+    costLakhs: 112,
     populationBenefit: 9000,
     criticalityScore: 5.5,
     rationale:
@@ -88,7 +88,7 @@ export const BUDGET_PROJECTS: BudgetProject[] = [
   {
     id: "bp-shelter-upgrade",
     name: "Community flood-shelter upgrade, Kuttampuzha LP School",
-    costLakhs: 22,
+    costLakhs: 176,
     populationBenefit: 4000,
     criticalityScore: 6.0,
     rationale:
@@ -99,6 +99,7 @@ export const BUDGET_PROJECTS: BudgetProject[] = [
   },
 ];
 
-export const DEFAULT_BUDGET_LAKHS = 150;
+export const DEFAULT_BUDGET_LAKHS = 800;
 export const MIN_BUDGET_LAKHS = 0;
-export const MAX_BUDGET_LAKHS = 250;
+export const MAX_BUDGET_LAKHS = 2000;
+export const BUDGET_STEP_LAKHS = 50;

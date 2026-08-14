@@ -3,27 +3,27 @@
 import { useMemo } from "react";
 import { useDemoStore } from "@/lib/store/demo-store";
 import { BUDGET_PROJECTS } from "@/lib/fixtures/budget";
-import { selectBudgetPortfolio, exclusionReason } from "@/lib/knapsack";
-import { PageHeader } from "@/components/shared/PageHeader";
+import { selectBudgetPortfolio, exclusionReason, budgetRationale } from "@/lib/knapsack";
 import { GlassCard } from "@/components/shared/GlassCard";
 import { BudgetSlider } from "@/components/budget/BudgetSlider";
 import { BudgetProjectRow } from "@/components/budget/BudgetProjectRow";
+import { RationalePanel } from "@/components/budget/RationalePanel";
 
-export default function BudgetPlannerPage() {
+function crores(lakhs: number) {
+  return (lakhs / 100).toLocaleString("en-IN", { maximumFractionDigits: 2 });
+}
+
+export function BudgetPlannerDashboard() {
   const { budgetLakhs, setBudgetLakhs } = useDemoStore();
 
   const result = useMemo(
     () => selectBudgetPortfolio(BUDGET_PROJECTS, budgetLakhs),
     [budgetLakhs]
   );
+  const rationale = useMemo(() => budgetRationale(budgetLakhs, result), [budgetLakhs, result]);
 
   return (
     <div className="mx-auto flex max-w-4xl flex-col gap-6">
-      <PageHeader
-        title="Budget planner"
-        description="0/1 knapsack over a configured project list — exact optimum for population + criticality benefit within the slider budget."
-      />
-
       <BudgetSlider value={budgetLakhs} onChange={setBudgetLakhs} />
 
       <div className="grid grid-cols-1 gap-4 sm:grid-cols-3">
@@ -32,7 +32,7 @@ export default function BudgetPlannerPage() {
           <p className="text-[11px] font-bold uppercase tracking-wide text-gray-500">Projects selected</p>
         </GlassCard>
         <GlassCard className="text-center">
-          <p className="text-2xl font-black text-gray-900">₹{result.totalCostLakhs}L</p>
+          <p className="text-2xl font-black text-gray-900">₹{crores(result.totalCostLakhs)} Cr</p>
           <p className="text-[11px] font-bold uppercase tracking-wide text-gray-500">Spent of budget</p>
         </GlassCard>
         <GlassCard className="text-center">
@@ -43,9 +43,11 @@ export default function BudgetPlannerPage() {
         </GlassCard>
       </div>
 
+      <RationalePanel rationale={rationale} />
+
       <section className="flex flex-col gap-3">
         <h2 className="text-sm font-extrabold uppercase tracking-wide text-gray-500">
-          Selected ({result.selected.length})
+          Funded / selected ({result.selected.length})
         </h2>
         {result.selected.length === 0 ? (
           <GlassCard className="text-sm font-semibold text-gray-500">
@@ -58,7 +60,7 @@ export default function BudgetPlannerPage() {
 
       <section className="flex flex-col gap-3">
         <h2 className="text-sm font-extrabold uppercase tracking-wide text-gray-500">
-          Excluded ({result.excluded.length})
+          Unfunded / excluded ({result.excluded.length})
         </h2>
         {result.excluded.map((p) => (
           <BudgetProjectRow

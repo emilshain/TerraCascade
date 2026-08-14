@@ -1,6 +1,11 @@
 import { CheckCircle2, XCircle } from "lucide-react";
 import type { BudgetProject } from "@/lib/types";
 import { GlassCard } from "@/components/shared/GlassCard";
+import { benefitCostRatio } from "@/lib/knapsack";
+
+function crores(lakhs: number) {
+  return (lakhs / 100).toLocaleString("en-IN", { maximumFractionDigits: 2 });
+}
 
 export function BudgetProjectRow({
   project,
@@ -25,12 +30,13 @@ export function BudgetProjectRow({
             <p className="text-[11px] text-gray-500">{project.region}</p>
           </div>
         </div>
-        <span className="shrink-0 text-sm font-black text-gray-900">₹{project.costLakhs}L</span>
+        <span className="shrink-0 text-sm font-black text-gray-900">₹{crores(project.costLakhs)} Cr</span>
       </div>
 
       <div className="flex flex-wrap gap-3 text-[11px] font-semibold text-gray-600">
-        <span>Population benefit: {project.populationBenefit.toLocaleString("en-IN")}</span>
+        <span>Protected pop: {project.populationBenefit.toLocaleString("en-IN")}</span>
         <span>Criticality: {project.criticalityScore.toFixed(1)}/10</span>
+        <span>Benefit-Cost: {benefitCostRatio(project).toFixed(1)}</span>
       </div>
 
       <p className="text-xs text-gray-600">{project.rationale}</p>

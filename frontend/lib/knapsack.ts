@@ -65,13 +65,46 @@ export function selectBudgetPortfolio(
   };
 }
 
+/** Population protected per ₹1000 Cr of cost — a display-only ratio, not the DP's internal benefit score. */
+export function benefitCostRatio(project: BudgetProject): number {
+  const costCrores = project.costLakhs / 100;
+  return Math.round((project.populationBenefit / (costCrores * 1000)) * 10) / 10;
+}
+
+function crores(lakhs: number) {
+  return (lakhs / 100).toLocaleString("en-IN", { maximumFractionDigits: 2 });
+}
+
+/**
+ * Builds the spec's "Explainable Optimization Rationale" paragraph for the
+ * current slider position — dynamically summarizes what the optimizer picked
+ * and the highest-cost thing it left out, so the "why" updates live with the
+ * slider instead of being a static caption.
+ */
+export function budgetRationale(budgetLakhs: number, result: KnapsackResult): string {
+  if (result.selected.length === 0) {
+    return `At a budget of ₹${crores(budgetLakhs)} Crores, no candidate project fits — the smallest project on the list still exceeds this budget.`;
+  }
+
+  const totalPopulation = result.selected.reduce((s, p) => s + p.populationBenefit, 0);
+  const topExcluded = [...result.excluded].sort((a, b) => b.costLakhs - a.costLakhs)[0];
+
+  const base = `At a budget of ₹${crores(budgetLakhs)} Crores, the optimizer maximized population protection by bundling ${result.selected.length} localized, high-yield intervention${result.selected.length === 1 ? "" : "s"} covering an estimated ${totalPopulation.toLocaleString("en-IN")} people`;
+
+  if (!topExcluded) {
+    return `${base} — every candidate project fits within this budget.`;
+  }
+
+  return `${base}, excluding "${topExcluded.name}" due to budget exhaustion and lower population-density return relative to the selected portfolio.`;
+}
+
 export function exclusionReason(
   project: BudgetProject,
   budgetLakhs: number,
   result: KnapsackResult
 ): string {
   if (project.costLakhs > budgetLakhs) {
-    return `Cost (₹${project.costLakhs}L) exceeds the full slider budget (₹${budgetLakhs}L).`;
+    return `Cost (₹${crores(project.costLakhs)} Cr) exceeds the full slider budget (₹${crores(budgetLakhs)} Cr).`;
   }
   if (result.selected.length === 0) {
     return "No budget remaining at this slider position.";

@@ -3,8 +3,8 @@ import { cn } from "@/lib/cn";
 
 const EAP_STYLE: Record<EapState, { label: string; className: string }> = {
   blue: { label: "Blue — Watch", className: "glass-blue" },
-  orange: { label: "Orange — Warning", className: "glass-orange" },
-  red: { label: "Red — Danger/Emergency", className: "glass-red" },
+  orange: { label: "Orange — Controlled spillage", className: "glass-orange" },
+  red: { label: "Red — Imminent failure", className: "glass-red" },
 };
 
 export function SeverityBadge({ state, className }: { state: EapState; className?: string }) {

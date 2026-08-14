@@ -15,12 +15,20 @@ const ASSET_COLOR: Record<MapAsset["type"], string> = {
   shelter: "#059669",
   critical_asset: "#2563eb",
   road: "#64748b",
+  bridge: "#0891b2",
 };
 
-function markerIcon(color: string) {
+const BRIDGE_STATUS_COLOR: Record<NonNullable<MapAsset["submersionStatus"]>, string> = {
+  normal: "#0891b2",
+  inundated: "#f97316",
+  submerged: "#ef4444",
+};
+
+function markerIcon(color: string, hazardBorder?: boolean) {
+  const border = hazardBorder ? "3px dashed #ef4444" : "2px solid white";
   return L.divIcon({
     className: "",
-    html: `<div style="background:${color};width:14px;height:14px;border-radius:50%;border:2px solid white;box-shadow:0 2px 6px rgba(0,0,0,.35)"></div>`,
+    html: `<div style="background:${color};width:14px;height:14px;border-radius:50%;border:${border};box-shadow:0 2px 6px rgba(0,0,0,.35)"></div>`,
     iconSize: [14, 14],
     iconAnchor: [7, 7],
   });
@@ -35,7 +43,7 @@ function buildPopup(asset: MapAsset): HTMLElement {
 
   const title = document.createElement("span");
   title.className = "tooltip-title";
-  title.textContent = asset.name;
+  title.textContent = asset.code ? `${asset.name} (${asset.code})` : asset.name;
   header.appendChild(title);
 
   const badge = document.createElement("span");
@@ -47,12 +55,30 @@ function buildPopup(asset: MapAsset): HTMLElement {
 
   root.appendChild(header);
 
-  const priority = document.createElement("p");
-  priority.style.fontSize = "0.7rem";
-  priority.style.fontWeight = "800";
-  priority.style.color = "#0f172a";
-  priority.textContent = `Priority ${asset.priority}${asset.blocked ? " · Blocked route" : ""}`;
-  root.appendChild(priority);
+  if (asset.type === "bridge" && asset.submersionStatus) {
+    const status = document.createElement("p");
+    status.style.fontSize = "0.7rem";
+    status.style.fontWeight = "800";
+    status.style.color = "#0f172a";
+    const statusLabel = asset.submersionStatus === "normal" ? "Normal" : asset.submersionStatus === "inundated" ? "Inundated" : "Submerged";
+    status.textContent = `EAP Status: ${statusLabel} | Depth: ${asset.depthMeters}m | Water Velocity: ${asset.velocityMps} m/s`;
+    root.appendChild(status);
+  } else if (asset.type === "shelter" && asset.accessBlocked) {
+    const badge = document.createElement("p");
+    badge.style.fontSize = "0.65rem";
+    badge.style.fontWeight = "800";
+    badge.style.color = "#b91c1c";
+    badge.style.textTransform = "uppercase";
+    badge.textContent = asset.deployNote ?? "Access Road Blocked - Deploy Amphibious Support";
+    root.appendChild(badge);
+  } else {
+    const priority = document.createElement("p");
+    priority.style.fontSize = "0.7rem";
+    priority.style.fontWeight = "800";
+    priority.style.color = "#0f172a";
+    priority.textContent = `Priority ${asset.priority}${asset.blocked ? " · Blocked route" : ""}`;
+    root.appendChild(priority);
+  }
 
   const rationale = document.createElement("p");
   rationale.style.fontSize = "0.68rem";
@@ -117,7 +143,12 @@ export function ImpactMapClient({
 
     assets.forEach((asset) => {
       if (asset.position) {
-        L.marker(asset.position, { icon: markerIcon(ASSET_COLOR[asset.type]) })
+        const markerColor =
+          asset.type === "bridge" && asset.submersionStatus
+            ? BRIDGE_STATUS_COLOR[asset.submersionStatus]
+            : ASSET_COLOR[asset.type];
+        const hazardBorder = asset.type === "shelter" && asset.accessBlocked;
+        L.marker(asset.position, { icon: markerIcon(markerColor, hazardBorder) })
           .bindPopup(() => buildPopup(asset))
           .addTo(layerGroup);
       } else if (asset.path) {

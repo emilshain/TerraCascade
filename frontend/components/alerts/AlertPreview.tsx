@@ -1,10 +1,12 @@
 "use client";
 
 import { useState } from "react";
-import { AlertOctagon, Languages, MapPin } from "lucide-react";
+import { AlertOctagon, ChevronDown, Languages, MapPin } from "lucide-react";
 import type { AlertDraft } from "@/lib/types";
 import { GlassCard } from "@/components/shared/GlassCard";
 import { ALERT_TRANSLATION_NOTE } from "@/lib/fixtures/alerts";
+import { SlideToApprove } from "@/components/alerts/SlideToApprove";
+import { cn } from "@/lib/cn";
 
 const APPROVAL_LABEL: Record<AlertDraft["approvalState"], string> = {
   draft: "Draft",
@@ -22,7 +24,25 @@ export function AlertPreview({
   onApprove: () => void;
 }) {
   const [lang, setLang] = useState<"en" | "ml">("en");
+  const [showPayload, setShowPayload] = useState(false);
   const copy = alert[lang];
+  const capPayload = {
+    identifier: alert.id,
+    status: alert.approvalState === "approved" ? "Actual" : "Draft",
+    msgType: "Alert",
+    scope: "Restricted",
+    info: {
+      language: lang === "en" ? "en-IN" : "ml-IN",
+      category: "Met",
+      event: "Flood",
+      urgency: alert.eapState === "red" ? "Immediate" : "Expected",
+      severity: alert.eapState === "red" ? "Severe" : alert.eapState === "orange" ? "Moderate" : "Minor",
+      certainty: "Likely",
+      headline: copy.headline,
+      description: copy.body,
+      area: { areaDesc: alert.affectedZone },
+    },
+  };
 
   return (
     <GlassCard tint="red" className="flex flex-col gap-4">
@@ -70,16 +90,36 @@ export function AlertPreview({
         </p>
       )}
 
-      <div className="flex justify-end">
+      <div className="rounded-2xl border border-gray-200 bg-white/60">
         <button
           type="button"
-          disabled={!canApprove || alert.approvalState === "approved"}
-          onClick={onApprove}
-          className="rounded-full bg-gray-900 px-4 py-2 text-xs font-bold text-white disabled:opacity-30"
-          title={canApprove ? "Approve for authorised publication" : "Only the Collector / authorised communicator role can approve"}
+          onClick={() => setShowPayload((v) => !v)}
+          className="flex w-full items-center justify-between gap-2 px-4 py-3 text-left text-xs font-bold text-gray-700"
         >
-          {alert.approvalState === "approved" ? "Approved" : "Approve for authorised publication"}
+          View CAP payload (JSON)
+          <ChevronDown className={cn("h-4 w-4 transition-transform", showPayload && "rotate-180")} aria-hidden />
         </button>
+        {showPayload && (
+          <pre className="custom-scrollbar max-h-56 overflow-auto border-t border-gray-100 px-4 py-3 text-[10px] leading-relaxed text-gray-600">
+            {JSON.stringify(capPayload, null, 2)}
+          </pre>
+        )}
+      </div>
+
+      <div className="flex flex-col gap-2">
+        <p className="text-center text-[11px] font-semibold text-gray-500">
+          Human-in-the-loop: no message is broadcast without physical magistrate authentication.
+        </p>
+        <SlideToApprove
+          disabled={!canApprove}
+          approved={alert.approvalState === "approved"}
+          onApprove={onApprove}
+        />
+        {!canApprove && (
+          <p className="text-center text-[11px] font-semibold text-gray-400">
+            Only the District Collector / authorised communicator role can approve.
+          </p>
+        )}
       </div>
     </GlassCard>
   );

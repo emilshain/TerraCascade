@@ -7,7 +7,6 @@ import { GlassCard } from "@/components/shared/GlassCard";
 import { StatusBadge } from "@/components/shared/StatusBadge";
 import { StatusStepper } from "@/components/actions/StatusStepper";
 import { ProtocolDrawer } from "@/components/shared/ProtocolDrawer";
-import { RestrictedNote } from "@/components/shared/RestrictedNote";
 import { OverrideModal } from "@/components/actions/OverrideModal";
 import { roleCanActOn } from "@/lib/store/demo-store";
 
@@ -23,8 +22,7 @@ export function ActionCard({
   onOverride: (id: string, status: ActionStatus, reason: string) => void;
 }) {
   const [overrideOpen, setOverrideOpen] = useState(false);
-  const hideDetail = action.restricted && role === "public_observer";
-  const canAct = role !== "public_observer" && (roleCanActOn(role, action.ownerRole) || roleCanActOn(role, action.approverRole));
+  const canAct = roleCanActOn(role, action.ownerRole) || roleCanActOn(role, action.approverRole);
   const isLast = action.status === ACTION_STATUS_ORDER[ACTION_STATUS_ORDER.length - 1];
 
   return (
@@ -37,7 +35,7 @@ export function ActionCard({
             )}
             <h3 className="text-base font-extrabold text-gray-900">{action.title}</h3>
           </div>
-          {!hideDetail && <p className="mt-1 text-sm text-gray-600">{action.description}</p>}
+          <p className="mt-1 text-sm text-gray-600">{action.description}</p>
         </div>
         <StatusBadge status={action.status} />
       </div>
@@ -57,16 +55,10 @@ export function ActionCard({
         </div>
       </div>
 
-      {hideDetail ? (
-        <div className="mt-4">
-          <RestrictedNote label="Restricted — authority-boundary detail visible to agency roles only" />
-        </div>
-      ) : (
-        <div className="mt-4 flex items-start gap-2 rounded-2xl bg-white/50 px-4 py-3 text-xs text-gray-600">
-          <ShieldAlert className="mt-0.5 h-3.5 w-3.5 shrink-0 text-gray-400" aria-hidden />
-          {action.authorityBoundary}
-        </div>
-      )}
+      <div className="mt-4 flex items-start gap-2 rounded-2xl bg-white/50 px-4 py-3 text-xs text-gray-600">
+        <ShieldAlert className="mt-0.5 h-3.5 w-3.5 shrink-0 text-gray-400" aria-hidden />
+        {action.authorityBoundary}
+      </div>
 
       <div className="mt-4">
         <ProtocolDrawer protocolSource={action.protocolSource} />

@@ -1,4 +1,4 @@
-import { Satellite, FilePlus2, ShieldCheck, CheckCheck, ShieldAlert, Send } from "lucide-react";
+import { Satellite, FilePlus2, ShieldCheck, CheckCheck, ShieldAlert, Send, CheckCircle2, AlertTriangle } from "lucide-react";
 import type { AuditEntry } from "@/lib/types";
 import { ROLES } from "@/lib/fixtures/roles";
 
@@ -55,6 +55,24 @@ export function AuditEntryRow({ entry }: { entry: AuditEntry }) {
           <span className="text-[11px] font-semibold text-gray-400">{formatTimestamp(entry.timestamp)}</span>
         </div>
         <p className="mt-1.5 text-sm font-semibold text-gray-800">{entry.description}</p>
+        <div className="mt-2 flex flex-wrap items-center gap-2">
+          {entry.protocolTag && (
+            <span className="rounded-full bg-gray-100 px-2 py-0.5 text-[10px] font-bold text-gray-600">
+              [{entry.protocolTag}]
+            </span>
+          )}
+          {entry.validation === "verified" ? (
+            <span className="inline-flex items-center gap-1 rounded-full bg-emerald-100 px-2 py-0.5 text-[10px] font-bold text-emerald-700">
+              <CheckCircle2 className="h-3 w-3" aria-hidden />
+              [Verified Action]
+            </span>
+          ) : (
+            <span className="inline-flex items-center gap-1 rounded-full bg-amber-100 px-2 py-0.5 text-[10px] font-bold text-amber-700">
+              <AlertTriangle className="h-3 w-3" aria-hidden />
+              [Demo Simulation Override]
+            </span>
+          )}
+        </div>
         {entry.reason && (
           <p className="mt-2 rounded-xl bg-red-50 px-3 py-2 text-xs font-semibold text-red-700">
             Reason: {entry.reason}

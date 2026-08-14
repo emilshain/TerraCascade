@@ -14,6 +14,7 @@ import type {
   AlertDraft,
   AuditEntry,
   EapState,
+  MapAsset,
   Role,
 } from "@/lib/types";
 import { ACTION_STATUS_ORDER } from "@/lib/types";
@@ -22,18 +23,18 @@ import { ALERT_DRAFTS } from "@/lib/fixtures/alerts";
 import { INITIAL_AUDIT_LOG } from "@/lib/fixtures/audit";
 import { DEFAULT_ROLE } from "@/lib/fixtures/roles";
 import { DEFAULT_BUDGET_LAKHS } from "@/lib/fixtures/budget";
+import { INITIAL_ROADS } from "@/lib/fixtures/assets";
 
 const DEFAULT_EAP_STATE: EapState = "orange";
 
 const ROLE_MATCH_TOKENS: Record<Role, string[]> = {
   kseb_epm: ["kseb epm", "kseb"],
   district_eoc: ["district eoc"],
-  district_authority: ["district authority", "collector", "authorised communicator"],
-  public_observer: [],
+  district_collector: ["district collector", "collector", "authorised communicator"],
+  budget_planner: ["budget planner"],
 };
 
 export function roleCanActOn(role: Role, roleText: string): boolean {
-  if (role === "public_observer") return false;
   const haystack = roleText.toLowerCase();
   return ROLE_MATCH_TOKENS[role].some((token) => haystack.includes(token));
 }
@@ -63,6 +64,8 @@ interface DemoStoreValue {
   setBudgetLakhs: (value: number) => void;
   alerts: Record<EapState, AlertDraft>;
   approveAlert: (eapState: EapState) => void;
+  roads: MapAsset[];
+  toggleRouteBlocked: (roadId: string) => void;
 }
 
 const DemoStoreContext = createContext<DemoStoreValue | null>(null);
@@ -74,6 +77,7 @@ export function DemoStoreProvider({ children }: { children: ReactNode }) {
   const [auditLog, setAuditLog] = useState<AuditEntry[]>(INITIAL_AUDIT_LOG);
   const [budgetLakhs, setBudgetLakhs] = useState<number>(DEFAULT_BUDGET_LAKHS);
   const [alerts, setAlerts] = useState<Record<EapState, AlertDraft>>(ALERT_DRAFTS);
+  const [roads, setRoads] = useState<MapAsset[]>(INITIAL_ROADS);
 
   const pushAudit = useCallback((entry: Omit<AuditEntry, "id" | "timestamp">) => {
     setAuditLog((prev) => [
@@ -101,6 +105,8 @@ export function DemoStoreProvider({ children }: { children: ReactNode }) {
               eventType,
               description: `"${action.title}" moved to ${nextStatus.replace("_", " ")}.`,
               relatedActionId: action.id,
+              validation: "verified",
+              protocolTag: `${action.protocolSource.document} - ${action.protocolSource.section.split(" — ")[0]}`,
             });
           }
           return { ...action, status: nextStatus, updatedAt: new Date().toISOString() };
@@ -121,6 +127,8 @@ export function DemoStoreProvider({ children }: { children: ReactNode }) {
             description: `"${action.title}" manually set to ${newStatus.replace("_", " ")}.`,
             relatedActionId: action.id,
             reason,
+            validation: "demo_override",
+            protocolTag: `${action.protocolSource.document} - ${action.protocolSource.section.split(" — ")[0]}`,
           });
           return { ...action, status: newStatus, updatedAt: new Date().toISOString() };
         })
@@ -139,7 +147,28 @@ export function DemoStoreProvider({ children }: { children: ReactNode }) {
         actorRole: role,
         eventType: "approval",
         description: `Public-alert draft for ${state} state approved for authorised publication.`,
+        validation: "verified",
       });
+    },
+    [pushAudit, role]
+  );
+
+  const toggleRouteBlocked = useCallback(
+    (roadId: string) => {
+      setRoads((prev) =>
+        prev.map((road) => {
+          if (road.id !== roadId) return road;
+          const nextBlocked = !road.blocked;
+          pushAudit({
+            actorRole: role,
+            eventType: "override",
+            description: `"${road.name}" marked ${nextBlocked ? "blocked" : "open"} by District EOC route-blocker control.`,
+            reason: `Manual route-status override: District EOC set this segment to ${nextBlocked ? "blocked" : "open"}.`,
+            validation: "demo_override",
+          });
+          return { ...road, blocked: nextBlocked };
+        })
+      );
     },
     [pushAudit, role]
   );
@@ -158,8 +187,22 @@ export function DemoStoreProvider({ children }: { children: ReactNode }) {
       setBudgetLakhs,
       alerts,
       approveAlert,
+      roads,
+      toggleRouteBlocked,
     }),
-    [role, eapState, actions, advanceAction, overrideAction, auditLog, budgetLakhs, alerts, approveAlert]
+    [
+      role,
+      eapState,
+      actions,
+      advanceAction,
+      overrideAction,
+      auditLog,
+      budgetLakhs,
+      alerts,
+      approveAlert,
+      roads,
+      toggleRouteBlocked,
+    ]
   );
 
   return <DemoStoreContext.Provider value={value}>{children}</DemoStoreContext.Provider>;
