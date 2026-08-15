@@ -1,13 +1,23 @@
 import { createApp } from "./app.js";
 import { connectDatabase, disconnectDatabase } from "./config/database.js";
 
+import { authService } from "./services/auth-service.js";
+
 const PORT = process.env.PORT ? parseInt(process.env.PORT, 10) : 4000;
 const app = createApp();
 
-// Connect to MongoDB Cluster
-connectDatabase().catch((err) => {
-  console.warn("[Startup] MongoDB initial connection deferred:", err.message);
-});
+// Connect to MongoDB Cluster & auto-seed verified officials
+connectDatabase()
+  .then(async (connected) => {
+    if (connected) {
+      await authService.seedDemoUsers().catch((err) => {
+        console.warn("[MongoDB] Auto-seeding warning:", err.message);
+      });
+    }
+  })
+  .catch((err) => {
+    console.warn("[Startup] MongoDB initial connection deferred:", err.message);
+  });
 
 const server = app.listen(PORT, () => {
   console.log(`=======================================================`);
