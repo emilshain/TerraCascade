@@ -143,10 +143,10 @@ export function LiveModelTrigger({ className }: { className?: string }) {
                   type="button"
                   onClick={() => setSelectedPreset(preset)}
                   className={cn(
-                    "flex flex-col items-start rounded-2xl p-3 text-left transition-all border",
+                    "flex flex-col items-start rounded-2xl p-3 text-left transition-all border hover:-translate-y-0.5",
                     active
-                      ? "bg-blue-100 border-blue-300 text-gray-900 shadow-sm shadow-blue-200"
-                      : "bg-gray-50 border-gray-200 text-gray-700 hover:bg-gray-100"
+                      ? "bg-blue-100 border-blue-300 text-gray-900 shadow-md shadow-blue-200"
+                      : "bg-gray-50 border-gray-200 text-gray-700 hover:bg-gray-100 hover:shadow-sm"
                   )}
                 >
                   <div className="flex w-full items-center justify-between gap-2">

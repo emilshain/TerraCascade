@@ -26,7 +26,7 @@ export function ActionCard({
   const isLast = action.status === ACTION_STATUS_ORDER[ACTION_STATUS_ORDER.length - 1];
 
   return (
-    <GlassCard className={action.attentionRequired && action.status !== "complete" ? "border-2 !border-amber-300" : undefined}>
+    <GlassCard id={`action-${action.id}`} className={action.attentionRequired && action.status !== "complete" ? "border-2 !border-amber-300" : undefined}>
       <div className="flex flex-wrap items-start justify-between gap-3">
         <div className="min-w-0">
           <div className="flex items-center gap-2">
@@ -69,7 +69,7 @@ export function ActionCard({
           type="button"
           disabled={!canAct}
           onClick={() => setOverrideOpen(true)}
-          className="rounded-full border border-red-200 px-4 py-2 text-xs font-bold text-red-600 disabled:opacity-30"
+          className="rounded-full border border-red-200 px-4 py-2 text-xs font-bold text-red-600 disabled:opacity-30 transition-all hover:bg-red-50 active:scale-95"
           title={canAct ? "Manually set a status with a reason" : "Only the owner or approver role can override"}
         >
           Override
@@ -78,7 +78,7 @@ export function ActionCard({
           type="button"
           disabled={!canAct || isLast}
           onClick={() => onAdvance(action.id)}
-          className="rounded-full bg-blue-600 px-4 py-2 text-xs font-bold text-white disabled:opacity-30"
+          className="rounded-full bg-blue-600 px-4 py-2 text-xs font-bold text-white disabled:opacity-30 transition-all hover:bg-blue-700 hover:shadow-lg active:scale-95"
           title={canAct ? "Advance to the next workflow stage" : "Only the owner or approver role can advance this action"}
         >
           {isLast ? "Complete" : "Advance"}

@@ -13,7 +13,7 @@ export function GlassCard({
   return (
     <div
       className={cn(
-        "glass-card rounded-3xl p-6",
+        "glass-card rounded-3xl p-6 animate-fade-in hover-lift",
         tint && `glass-tint-${tint}`,
         className
       )}
