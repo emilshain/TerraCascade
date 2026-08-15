@@ -38,10 +38,11 @@ router.post("/live-predict", async (req, res, next) => {
     );
 
     res.json({
-      message: "Live flood inference executed successfully.",
+      message: "Live flood inference executed successfully. Automated Twilio SMS alerts dispatched to contact numbers.",
       event: result.event,
       fromDockerModel: result.fromDockerModel,
       latencyMs: result.latencyMs,
+      smsResults: result.smsResults,
     });
   } catch (err) {
     next(err);

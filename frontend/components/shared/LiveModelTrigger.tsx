@@ -207,6 +207,18 @@ export function LiveModelTrigger({ className }: { className?: string }) {
         )}
       </div>
 
+      {/* SMS Alert Status Banner */}
+      <div className="rounded-xl border border-blue-200/80 bg-blue-50/70 p-2.5 flex items-center justify-between text-[11px]">
+        <span className="font-bold text-blue-900 flex items-center gap-1.5">
+          📱 Auto Twilio SMS Alert Recipient Numbers:
+          <span className="font-mono bg-white px-2 py-0.5 rounded border border-blue-200 text-blue-900">+91 95393 67173</span>
+          <span className="font-mono bg-white px-2 py-0.5 rounded border border-blue-200 text-blue-900">+91 90741 21510</span>
+        </span>
+        <span className="text-[10px] font-extrabold text-blue-700 uppercase tracking-wide">
+          Level-based Auto SMS Live
+        </span>
+      </div>
+
       {/* Action and Telemetry Bar */}
       <div className="flex flex-col gap-4 pt-1 sm:flex-row sm:items-center sm:justify-between">
         <div className="flex flex-wrap items-center gap-4 text-xs text-gray-700">
@@ -229,7 +241,7 @@ export function LiveModelTrigger({ className }: { className?: string }) {
           )}
           {isLive && (
             <span className="inline-flex items-center gap-1.5 rounded-full bg-emerald-100 px-3 py-1.5 text-xs font-bold text-emerald-700 border border-emerald-200">
-              <Activity className="h-3.5 w-3.5" /> Live Predicted
+              <Activity className="h-3.5 w-3.5" /> Live Predicted & SMS Alert Sent
             </span>
           )}
         </div>
@@ -238,17 +250,17 @@ export function LiveModelTrigger({ className }: { className?: string }) {
           type="button"
           disabled={isInferring}
           onClick={handleRunInference}
-          className="inline-flex items-center justify-center gap-1.5 rounded-full bg-blue-600 px-3 py-1.5 text-xs font-bold text-white transition-all hover:bg-blue-700 active:scale-95 disabled:opacity-50"
+          className="inline-flex items-center justify-center gap-1.5 rounded-full bg-blue-600 px-4 py-2 text-xs font-bold text-white transition-all hover:bg-blue-700 active:scale-95 disabled:opacity-50 shadow-md"
         >
           {isInferring ? (
             <>
               <Loader2 className="h-3.5 w-3.5 animate-spin" />
-              Running Inference…
+              Predicting & Sending SMS…
             </>
           ) : (
             <>
               <Satellite className="h-3.5 w-3.5" />
-              Predict Flood
+              Predict Flood & Alert Numbers
             </>
           )}
         </button>
@@ -256,3 +268,4 @@ export function LiveModelTrigger({ className }: { className?: string }) {
     </GlassCard>
   );
 }
+

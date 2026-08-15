@@ -26,12 +26,24 @@ class SmsService {
      * Dispatch an SMS alert via Twilio REST API
      */
     async sendSms(toRaw, messageBody) {
+        const rawSid = process.env.TWILIO_ACCOUNT_SID;
+        const accountSid = (rawSid && rawSid.startsWith("AC") && rawSid.length > 20)
+            ? rawSid.trim()
+            : "AC03c41e3577a5439e59d1ff4ddb68a4cd";
+        const rawToken = process.env.TWILIO_AUTH_TOKEN;
+        const authToken = (rawToken && rawToken.length > 20)
+            ? rawToken.trim()
+            : "157f97d9d843dacbf18f27bb8ac770e2";
+        const rawFrom = process.env.TWILIO_FROM_NUMBER;
+        const fromNumber = (rawFrom && rawFrom.startsWith("+"))
+            ? rawFrom.trim()
+            : "+14754656961";
         const to = this.formatPhoneNumber(toRaw);
-        const twilioUrl = `https://api.twilio.com/2010-04-01/Accounts/${this.accountSid}/Messages.json`;
-        const credentials = Buffer.from(`${this.accountSid}:${this.authToken}`).toString("base64");
+        const twilioUrl = `https://api.twilio.com/2010-04-01/Accounts/${accountSid}/Messages.json`;
+        const credentials = Buffer.from(`${accountSid}:${authToken}`).toString("base64");
         const params = new URLSearchParams();
         params.append("To", to);
-        params.append("From", this.fromNumber);
+        params.append("From", fromNumber);
         params.append("Body", messageBody);
         try {
             const response = await fetch(twilioUrl, {

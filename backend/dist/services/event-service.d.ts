@@ -5,6 +5,7 @@
  */
 import type { HazardEvent, EapSeverity } from "../types/index.js";
 import { type PredictFloodParams } from "./model-client.js";
+import { type SmsDispatchResult } from "./sms-service.js";
 export declare class EventService {
     private activeState;
     private customLiveEvent;
@@ -16,6 +17,7 @@ export declare class EventService {
         event: HazardEvent;
         fromDockerModel: boolean;
         latencyMs?: number;
+        smsResults?: SmsDispatchResult[];
     }>;
     getActiveState(): EapSeverity;
 }

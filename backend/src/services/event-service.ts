@@ -7,6 +7,8 @@ import type { HazardEvent, EapSeverity } from "../types/index.js";
 import { HAZARD_EVENTS } from "../fixtures/hazard-fixtures.js";
 import { timelineService } from "./timeline-service.js";
 import { modelClient, type PredictFloodParams } from "./model-client.js";
+import { smsService, type SmsDispatchResult } from "./sms-service.js";
+import { ENV } from "../config/env.js";
 
 export class EventService {
   private activeState: EapSeverity = "orange";
@@ -64,7 +66,7 @@ export class EventService {
   public async triggerLivePrediction(
     params: PredictFloodParams = {},
     actorRole = "kseb_epm"
-  ): Promise<{ event: HazardEvent; fromDockerModel: boolean; latencyMs?: number }> {
+  ): Promise<{ event: HazardEvent; fromDockerModel: boolean; latencyMs?: number; smsResults?: SmsDispatchResult[] }> {
     const t0 = Date.now();
     const fetched = await modelClient.predictFlood(params);
     let fromDockerModel = true;
@@ -109,10 +111,34 @@ export class EventService {
         : "Local Fallback Inference Engine",
     });
 
+    // Automatically send SMS alert according to predicted severity level to target numbers
+    const severityTitle = liveEvent.severity === "red"
+      ? "RED ALERT - EXTREME FLOOD EMERGENCY"
+      : liveEvent.severity === "orange"
+      ? "ORANGE ALERT - CONTROLLED RELEASE WARNING"
+      : "BLUE ALERT - FLOOD WATCH MONITORING";
+
+    const affectedZonesText = liveEvent.affectedZones && liveEvent.affectedZones.length > 0
+      ? liveEvent.affectedZones.join(", ")
+      : "Idamalayar Bhoothathankettu Corridor";
+
+    const smsMessage = `[TerraCascade ${severityTitle}]\nPredicted Severity: ${liveEvent.severity.toUpperCase()}\nDischarge Rate: ${params.discharge_cumecs || 1200} cumecs\nRainfall: ${params.rainfall_mm_hr || 45} mm/hr\nAffected Zone: ${affectedZonesText}\nImmediate EAP action required.`;
+
+    const smsResults = await smsService.dispatchAlertSms(smsMessage, ENV.ALERT_RECIPIENTS);
+    const successfulDispatches = smsResults.filter((r: SmsDispatchResult) => r.success);
+
+    timelineService.recordEvent({
+      actorRole,
+      eventType: "approval",
+      description: `Automated Twilio Flood Prediction SMS sent to ${ENV.ALERT_RECIPIENTS.join(", ")} for predicted ${liveEvent.severity.toUpperCase()} state. Delivered: ${successfulDispatches.length}/${smsResults.length}.`,
+      provenance: "Twilio REST API SMS Gateway",
+    });
+
     return {
       event: liveEvent,
       fromDockerModel,
       latencyMs: Date.now() - t0,
+      smsResults,
     };
   }
 
@@ -122,3 +148,4 @@ export class EventService {
 }
 
 export const eventService = new EventService();
+
