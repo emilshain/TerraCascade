@@ -23,8 +23,16 @@ import { BUDGET_PROJECTS } from "./fixtures/budget";
 import { INITIAL_AUDIT_LOG } from "./fixtures/audit";
 import { ALERT_DRAFTS } from "./fixtures/alerts";
 
-const API_BASE_URL =
-  process.env.NEXT_PUBLIC_API_URL || "http://localhost:4000";
+function normalizeUrl(url: string): string {
+  let cleaned = (url || "").trim().replace(/\/+$/, "");
+  if (!cleaned) return "http://localhost:4000";
+  if (!cleaned.startsWith("http://") && !cleaned.startsWith("https://")) {
+    cleaned = `https://${cleaned}`;
+  }
+  return cleaned;
+}
+
+const API_BASE_URL = normalizeUrl(process.env.NEXT_PUBLIC_API_URL || "http://localhost:4000");
 
 export interface ImpactResponse {
   eventId: string;
@@ -58,7 +66,7 @@ export class TerraCascadeApiClient {
   private baseUrl: string;
 
   constructor(baseUrl = API_BASE_URL) {
-    this.baseUrl = baseUrl;
+    this.baseUrl = normalizeUrl(baseUrl);
   }
 
   public async getHealth(): Promise<{ status: string; hazardScope: string } | null> {
