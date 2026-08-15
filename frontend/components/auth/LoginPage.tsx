@@ -274,7 +274,7 @@ export function LoginPage() {
           {/* Register / Sign In navigation */}
           <div className="mt-5 text-center text-xs font-semibold text-gray-500">
             <span>New officer?</span>{" "}
-            <Link href="/signin" className="font-bold text-blue-600 hover:underline">
+            <Link href="/signup" className="font-bold text-blue-600 hover:underline">
               Create official account &rarr;
             </Link>
           </div>

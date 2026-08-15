@@ -31,9 +31,9 @@ export function Sidebar() {
                 key={item.href}
                 href={item.href}
                 className={cn(
-                  "flex items-center gap-3 rounded-2xl px-3 py-2.5 text-sm font-semibold transition-colors",
+                  "flex items-center gap-3 rounded-2xl px-3 py-2.5 text-sm font-semibold transition-all duration-300 hover:-translate-y-0.5",
                   active
-                    ? "bg-blue-600 text-white shadow-sm"
+                    ? "bg-blue-600 text-white shadow-md hover:shadow-lg"
                     : "text-gray-600 hover:bg-gray-100 hover:text-gray-900"
                 )}
               >
@@ -44,7 +44,6 @@ export function Sidebar() {
           })}
         </nav>
       </div>
-<<<<<<< HEAD
 
       <div className="px-3 pb-4 space-y-3">
         {/* Officer Card */}
@@ -84,31 +83,6 @@ export function Sidebar() {
         <div className="rounded-2xl border border-amber-200 bg-amber-50 px-3.5 py-2.5 text-[10px] font-semibold leading-relaxed text-amber-800">
           Verified demo — fixture data only. No live feed, no dispatched alerts.
         </div>
-=======
-      <nav className="flex flex-1 flex-col gap-1 px-3">
-        {NAV_ITEMS.map((item) => {
-          const active = pathname === item.href;
-          const Icon = item.icon;
-          return (
-            <Link
-              key={item.href}
-              href={item.href}
-              className={cn(
-                "flex items-center gap-3 rounded-2xl px-3 py-2.5 text-sm font-semibold transition-all duration-300 hover:-translate-y-0.5",
-                active
-                  ? "bg-blue-600 text-white shadow-md hover:shadow-lg"
-                  : "text-gray-600 hover:bg-gray-100 hover:text-gray-900"
-              )}
-            >
-              <Icon className="h-4 w-4" aria-hidden />
-              {item.label}
-            </Link>
-          );
-        })}
-      </nav>
-      <div className="mx-3 mb-6 rounded-2xl border border-amber-200 bg-amber-50 px-4 py-3 text-[11px] font-semibold leading-relaxed text-amber-800">
-        Verified demo — fixture data only. No live feed, no dispatched alerts.
->>>>>>> 2260bf3fc5bfab7215c3d6584357855f90893019
       </div>
     </aside>
   );
