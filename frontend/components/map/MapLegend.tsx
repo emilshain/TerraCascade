@@ -1,7 +1,7 @@
 import type { EapState } from "@/lib/types";
 
 const SEVERITY_COLOR: Record<EapState, string> = {
-  blue: "#2563eb",
+  blue: "#1f63f5",
   orange: "#f97316",
   red: "#ef4444",
 };
@@ -48,7 +48,7 @@ export function MapLegend({ eapState }: { eapState: EapState }) {
           🏷️ Verified physical assets (ground truth)
         </p>
         <div className="flex items-center gap-2 font-semibold text-gray-700">
-          <Swatch color="#2563eb" /> Reservoir / regulator (named EAP structure)
+          <Swatch color="#1f63f5" /> Reservoir / regulator (named EAP structure)
         </div>
         <div className="flex items-center gap-2 font-semibold text-gray-700">
           <Swatch color="#0891b2" /> Bridge (submersion status — cyan/orange/red by depth)

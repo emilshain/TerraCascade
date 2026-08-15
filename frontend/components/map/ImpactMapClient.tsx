@@ -5,7 +5,7 @@ import L from "leaflet";
 import type { EapState, HazardEvent, MapAsset } from "@/lib/types";
 
 const SEVERITY_COLOR: Record<EapState, string> = {
-  blue: "#2563eb",
+  blue: "#1f63f5",
   orange: "#f97316",
   red: "#ef4444",
 };
@@ -13,7 +13,7 @@ const SEVERITY_COLOR: Record<EapState, string> = {
 const ASSET_COLOR: Record<MapAsset["type"], string> = {
   hospital: "#dc2626",
   shelter: "#059669",
-  critical_asset: "#2563eb",
+  critical_asset: "#1f63f5",
   road: "#64748b",
   bridge: "#0891b2",
 };
