@@ -172,9 +172,9 @@ router.get("/:id/alerts", (req, res) => {
 });
 /**
  * POST /events/:id/alerts/approve
- * Sign-off and approve bilingual alert draft
+ * Sign-off, approve bilingual alert draft, and dispatch Twilio SMS to alert contacts
  */
-router.post("/:id/alerts/approve", (req, res, next) => {
+router.post("/:id/alerts/approve", async (req, res, next) => {
     try {
         const { id } = req.params;
         const { actorRole } = req.body;
@@ -192,10 +192,37 @@ router.post("/:id/alerts/approve", (req, res, next) => {
             });
             return;
         }
-        const approvedAlert = alert_service_js_1.alertService.approveAlert(state, actorRole);
+        const { alert, smsResults } = await alert_service_js_1.alertService.approveAlert(state, actorRole);
         res.json({
-            message: `Alert draft for ${state.toUpperCase()} state approved for authorized publication.`,
-            alert: approvedAlert,
+            message: `Alert draft for ${state.toUpperCase()} state approved and SMS notifications dispatched.`,
+            alert,
+            smsResults,
+        });
+    }
+    catch (err) {
+        next(err);
+    }
+});
+/**
+ * POST /events/:id/alerts/dispatch-sms
+ * Direct manual dispatch of Twilio Emergency SMS to emergency alert contacts
+ */
+router.post("/:id/alerts/dispatch-sms", async (req, res, next) => {
+    try {
+        const { id } = req.params;
+        const { actorRole, recipients } = req.body || {};
+        let state;
+        if (id === "active") {
+            state = event_service_js_1.eventService.getActiveState();
+        }
+        else {
+            state = id.replace("hazard-", "").toLowerCase();
+        }
+        const smsResults = await alert_service_js_1.alertService.dispatchSmsManually(state, recipients, actorRole || "district_authority");
+        res.json({
+            message: `Emergency SMS alert dispatched via Twilio to ${smsResults.length} contacts.`,
+            recipients: smsResults.map((r) => r.recipient),
+            smsResults,
         });
     }
     catch (err) {

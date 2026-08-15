@@ -214,7 +214,7 @@ export class TerraCascadeApiClient {
     }
   }
 
-  public async approveAlert(eapState: EapState, actorRole = "district_authority"): Promise<AlertDraft | null> {
+  public async approveAlert(eapState: EapState, actorRole = "district_authority"): Promise<{ alert: AlertDraft; smsResults?: any[] } | null> {
     try {
       const res = await fetch(`${this.baseUrl}/events/${eapState}/alerts/approve`, {
         method: "POST",
@@ -223,11 +223,30 @@ export class TerraCascadeApiClient {
       });
       if (!res.ok) throw new Error("Backend unavailable");
       const data = await res.json();
-      return data.alert as AlertDraft;
+      return { alert: data.alert as AlertDraft, smsResults: data.smsResults };
     } catch {
-      return ALERT_DRAFTS[eapState];
+      return { alert: ALERT_DRAFTS[eapState] };
+    }
+  }
+
+  public async dispatchSmsAlert(eapState: EapState, recipients?: string[], actorRole = "district_authority") {
+    try {
+      const res = await fetch(`${this.baseUrl}/events/${eapState}/alerts/dispatch-sms`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ actorRole, recipients }),
+      });
+      if (!res.ok) throw new Error("SMS dispatch request failed");
+      return await res.json();
+    } catch (err: any) {
+      return {
+        message: "SMS dispatch error",
+        error: err.message || "Failed to trigger SMS alert",
+        smsResults: [],
+      };
     }
   }
 }
 
 export const apiClient = new TerraCascadeApiClient();
+
