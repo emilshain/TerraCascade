@@ -84,52 +84,50 @@ export function LiveModelTrigger({ className }: { className?: string }) {
   const isLive = activeHazard.id.startsWith("hazard-live-");
 
   return (
-    <GlassCard className={cn("flex flex-col gap-4 border border-blue-200/60 bg-gradient-to-br from-slate-900/90 to-blue-950/95 text-white shadow-xl backdrop-blur-xl", className)}>
-      <div className="flex flex-wrap items-center justify-between gap-2 border-b border-white/10 pb-3">
-        <div className="flex items-center gap-2">
-          <div className="flex h-8 w-8 items-center justify-center rounded-xl bg-blue-500/20 text-blue-400 border border-blue-400/30">
-            <Cpu className="h-4 w-4" />
+    <GlassCard tint="blue" className={cn("flex flex-col gap-4", className)}>
+      <div className="flex flex-wrap items-center justify-between gap-3 border-b border-gray-200 pb-4">
+        <div className="flex items-center gap-3">
+          <div className="flex h-9 w-9 items-center justify-center rounded-2xl bg-blue-100 text-blue-600 border border-blue-200">
+            <Cpu className="h-5 w-5" />
           </div>
           <div>
-            <h3 className="text-sm font-bold text-white tracking-wide">
+            <h3 className="text-base font-extrabold text-gray-900">
               Prithvi-100M ViT Model Engine
             </h3>
-            <p className="text-[11px] text-blue-200/70">
+            <p className="mt-0.5 text-xs text-gray-500">
               Containerized Live Flood Segmentation & Inundation Inference
             </p>
           </div>
         </div>
 
-        <div className="flex items-center gap-2">
-          <div
+        <div
+          className={cn(
+            "inline-flex items-center gap-1.5 rounded-full px-3 py-1.5 text-xs font-semibold border",
+            modelStatus?.online
+              ? "bg-emerald-100 text-emerald-700 border-emerald-200"
+              : "bg-amber-100 text-amber-700 border-amber-200"
+          )}
+        >
+          <span
             className={cn(
-              "inline-flex items-center gap-1.5 rounded-full px-2.5 py-1 text-[11px] font-semibold border",
-              modelStatus?.online
-                ? "bg-emerald-500/20 text-emerald-300 border-emerald-500/30"
-                : "bg-amber-500/20 text-amber-300 border-amber-500/30"
+              "h-2 w-2 rounded-full",
+              modelStatus?.online ? "bg-emerald-600 animate-pulse" : "bg-amber-600"
             )}
-          >
-            <span
-              className={cn(
-                "h-2 w-2 rounded-full",
-                modelStatus?.online ? "bg-emerald-400 animate-pulse" : "bg-amber-400"
-              )}
-            />
-            {modelStatus?.online ? "Docker ML Online" : "Local Inference Engine"}
-          </div>
+          />
+          {modelStatus?.online ? "Docker ML Online" : "Local Inference Engine"}
         </div>
       </div>
 
       {/* Preset Scenarios Selector */}
       <div>
-        <div className="mb-2 flex items-center justify-between">
-          <label className="text-[11px] font-bold uppercase tracking-wider text-blue-300/80">
+        <div className="mb-3 flex items-center justify-between">
+          <label className="text-xs font-bold uppercase tracking-wide text-gray-500">
             Hydrographic Scenario Inputs
           </label>
           <button
             type="button"
             onClick={() => setUseCustom(!useCustom)}
-            className="text-[11px] font-medium text-blue-400 hover:text-blue-300 transition-colors"
+            className="text-xs font-semibold text-blue-600 hover:text-blue-700 transition-colors"
           >
             {useCustom ? "Use Presets" : "Custom Sliders"}
           </button>
@@ -145,28 +143,28 @@ export function LiveModelTrigger({ className }: { className?: string }) {
                   type="button"
                   onClick={() => setSelectedPreset(preset)}
                   className={cn(
-                    "flex flex-col items-start rounded-xl p-2.5 text-left transition-all border",
+                    "flex flex-col items-start rounded-2xl p-3 text-left transition-all border",
                     active
-                      ? "bg-blue-600/30 border-blue-400 text-white shadow-md shadow-blue-500/10"
-                      : "bg-white/5 border-white/10 text-gray-300 hover:bg-white/10"
+                      ? "bg-blue-100 border-blue-300 text-gray-900 shadow-sm shadow-blue-200"
+                      : "bg-gray-50 border-gray-200 text-gray-700 hover:bg-gray-100"
                   )}
                 >
-                  <div className="flex w-full items-center justify-between">
-                    <span className="text-xs font-bold">{preset.name}</span>
+                  <div className="flex w-full items-center justify-between gap-2">
+                    <span className="text-sm font-bold">{preset.name}</span>
                     <span
                       className={cn(
-                        "rounded px-1.5 py-0.5 text-[10px] font-mono font-bold",
+                        "rounded px-2 py-0.5 text-xs font-mono font-semibold whitespace-nowrap",
                         preset.expectedState === "blue"
-                          ? "bg-blue-500/30 text-blue-300"
+                          ? "bg-blue-100 text-blue-700"
                           : preset.expectedState === "orange"
-                          ? "bg-amber-500/30 text-amber-300"
-                          : "bg-red-500/30 text-red-300"
+                          ? "bg-amber-100 text-amber-700"
+                          : "bg-red-100 text-red-700"
                       )}
                     >
                       {preset.badge}
                     </span>
                   </div>
-                  <p className="mt-1 text-[10px] text-gray-400 line-clamp-2 leading-tight">
+                  <p className="mt-1.5 text-xs text-gray-600 line-clamp-2 leading-snug">
                     {preset.description}
                   </p>
                 </button>
@@ -174,11 +172,11 @@ export function LiveModelTrigger({ className }: { className?: string }) {
             })}
           </div>
         ) : (
-          <div className="grid grid-cols-1 gap-3 sm:grid-cols-2 rounded-xl bg-white/5 p-3 border border-white/10">
+          <div className="grid grid-cols-1 gap-3 sm:grid-cols-2 rounded-2xl bg-gray-50 p-4 border border-gray-200">
             <div>
-              <div className="flex justify-between text-xs mb-1">
-                <span className="text-gray-300">Dam Discharge</span>
-                <span className="font-mono font-bold text-blue-300">{customDischarge} cumecs</span>
+              <div className="flex justify-between text-xs font-semibold mb-2">
+                <span className="text-gray-700">Dam Discharge</span>
+                <span className="font-mono text-blue-600">{customDischarge} cumecs</span>
               </div>
               <input
                 type="range"
@@ -187,13 +185,13 @@ export function LiveModelTrigger({ className }: { className?: string }) {
                 step={50}
                 value={customDischarge}
                 onChange={(e) => setCustomDischarge(Number(e.target.value))}
-                className="w-full accent-blue-500"
+                className="w-full accent-blue-600"
               />
             </div>
             <div>
-              <div className="flex justify-between text-xs mb-1">
-                <span className="text-gray-300">Catchment Rainfall</span>
-                <span className="font-mono font-bold text-cyan-300">{customRainfall} mm/hr</span>
+              <div className="flex justify-between text-xs font-semibold mb-2">
+                <span className="text-gray-700">Catchment Rainfall</span>
+                <span className="font-mono text-blue-600">{customRainfall} mm/hr</span>
               </div>
               <input
                 type="range"
@@ -202,7 +200,7 @@ export function LiveModelTrigger({ className }: { className?: string }) {
                 step={5}
                 value={customRainfall}
                 onChange={(e) => setCustomRainfall(Number(e.target.value))}
-                className="w-full accent-cyan-500"
+                className="w-full accent-blue-600"
               />
             </div>
           </div>
@@ -210,28 +208,28 @@ export function LiveModelTrigger({ className }: { className?: string }) {
       </div>
 
       {/* Action and Telemetry Bar */}
-      <div className="flex flex-wrap items-center justify-between gap-3 pt-1">
-        <div className="flex items-center gap-4 text-xs text-gray-300">
+      <div className="flex flex-col gap-4 pt-1 sm:flex-row sm:items-center sm:justify-between">
+        <div className="flex flex-wrap items-center gap-4 text-xs text-gray-700">
           {metrics && (
             <>
               <div className="flex items-center gap-1.5">
-                <Waves className="h-3.5 w-3.5 text-blue-400" />
+                <Waves className="h-4 w-4 text-blue-600" />
                 <span>
                   Flood Extent:{" "}
-                  <strong className="text-white font-mono">{metrics.totalFloodedAreaKm2} km²</strong>
+                  <strong className="text-gray-900 font-semibold">{metrics.totalFloodedAreaKm2} km²</strong>
                 </span>
               </div>
               <div className="flex items-center gap-1.5">
-                <Layers className="h-3.5 w-3.5 text-cyan-400" />
+                <Layers className="h-4 w-4 text-blue-600" />
                 <span>
-                  Zones: <strong className="text-white font-mono">{metrics.polygonCount ?? activeHazard.affectedZones?.length ?? 1}</strong>
+                  Zones: <strong className="text-gray-900 font-semibold">{metrics.polygonCount ?? activeHazard.affectedZones?.length ?? 1}</strong>
                 </span>
               </div>
             </>
           )}
           {isLive && (
-            <span className="inline-flex items-center gap-1 rounded bg-emerald-500/20 px-2 py-0.5 text-[10px] font-bold text-emerald-300 border border-emerald-500/30">
-              <Activity className="h-3 w-3" /> Live Predicted
+            <span className="inline-flex items-center gap-1.5 rounded-full bg-emerald-100 px-3 py-1.5 text-xs font-bold text-emerald-700 border border-emerald-200">
+              <Activity className="h-3.5 w-3.5" /> Live Predicted
             </span>
           )}
         </div>
@@ -240,17 +238,17 @@ export function LiveModelTrigger({ className }: { className?: string }) {
           type="button"
           disabled={isInferring}
           onClick={handleRunInference}
-          className="inline-flex items-center gap-2 rounded-xl bg-gradient-to-r from-blue-600 to-indigo-600 px-5 py-2.5 text-xs font-extrabold text-white shadow-lg shadow-blue-500/25 transition-all hover:from-blue-500 hover:to-indigo-500 active:scale-95 disabled:opacity-50"
+          className="inline-flex items-center justify-center gap-1.5 rounded-full bg-blue-600 px-3 py-1.5 text-xs font-bold text-white transition-all hover:bg-blue-700 active:scale-95 disabled:opacity-50"
         >
           {isInferring ? (
             <>
-              <Loader2 className="h-4 w-4 animate-spin text-white" />
-              Running ViT Inference in Docker…
+              <Loader2 className="h-3.5 w-3.5 animate-spin" />
+              Running Inference…
             </>
           ) : (
             <>
-              <Satellite className="h-4 w-4" />
-              Predict Flood Inundation
+              <Satellite className="h-3.5 w-3.5" />
+              Predict Flood
             </>
           )}
         </button>

@@ -213,8 +213,10 @@
   }
 
   .glass-header {
-    background: rgba(255, 255, 255, 0.06);
-    border-bottom: 1px solid rgba(0, 0, 0, 0.05);
+    background: rgba(255, 255, 255, 0.15);
+    border-bottom: 1px solid rgba(0, 0, 0, 0.08);
+    backdrop-filter: blur(20px);
+    -webkit-backdrop-filter: blur(20px);
   }
 
   .glass-blue { border: 1px solid rgba(37, 99, 235, 0.25); color: #2563eb; }
@@ -261,6 +263,33 @@
     backdrop-filter: blur(var(--glass-blur)) saturate(210%);
     border: 1px solid rgba(37, 99, 235, 0.1);
     @apply rounded-xl px-4 py-2 text-[15px] font-black text-blue-700 focus:outline-none focus:border-blue-500/30 focus:ring-4 focus:ring-blue-500/5 transition-all appearance-none cursor-pointer;
+  }
+
+  .glass-pill {
+    position: relative;
+    z-index: 40;
+    display: inline-flex;
+    align-items: center;
+    background: rgba(255, 255, 255, 0.3) !important;
+    border: 2px solid rgba(255, 255, 255, 0.6) !important;
+    box-shadow: 0 8px 32px rgba(31, 38, 135, 0.2);
+    backdrop-filter: blur(60px) saturate(280%);
+    -webkit-backdrop-filter: blur(60px) saturate(280%);
+    pointer-events: auto;
+  }
+
+  .glass-pill span,
+  .glass-pill label {
+    position: relative;
+    z-index: 1;
+  }
+
+  .glass-pill .glass-select-compact {
+    position: relative;
+    z-index: 1;
+    background: rgba(37, 99, 235, 0.08) !important;
+    backdrop-filter: none !important;
+    -webkit-backdrop-filter: none !important;
   }
 }
 
