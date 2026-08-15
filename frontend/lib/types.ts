@@ -54,6 +54,14 @@ export interface HazardEvent {
   confidenceLabel: string;
   protocolSource: ProtocolSource;
   floodExtentGeoJson: GeoJSON.FeatureCollection;
+  affectedZones?: string[];
+  metrics?: {
+    totalFloodedAreaKm2: number;
+    totalFloodedHectares: number;
+    dischargeCumecs: number;
+    rainfallMmHr: number;
+    polygonCount: number;
+  };
 }
 
 export type ActionStatus =

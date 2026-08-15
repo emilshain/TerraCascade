@@ -55,6 +55,49 @@ describe("TerraCascade EAP Command — Backend API Integration Suite", () => {
     expect(data.provenance.limitations).toContain("not a live feed");
   });
 
+  it("GET /events/model-status returns model container status structure", async () => {
+    const res = await fetch(`${baseUrl}/events/model-status`);
+    expect(res.status).toBe(200);
+    const data = (await res.json()) as { online: boolean; serviceUrl: string };
+    expect(data.serviceUrl).toBeDefined();
+    expect(typeof data.online).toBe("boolean");
+  });
+
+  it("POST /events/live-predict triggers live inference and updates active event and audit trail", async () => {
+    const res = await fetch(`${baseUrl}/events/live-predict`, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({
+        discharge_cumecs: 2400,
+        rainfall_mm_hr: 90,
+        actorRole: "kseb_epm",
+      }),
+    });
+    expect(res.status).toBe(200);
+
+    const data = (await res.json()) as {
+      message: string;
+      event: HazardEvent;
+      fromDockerModel: boolean;
+    };
+    expect(data.message).toContain("successfully");
+    expect(data.event.severity).toBe("red");
+    expect(data.event.floodExtentGeoJson).toBeDefined();
+    expect(data.event.floodExtentGeoJson?.features.length).toBeGreaterThan(0);
+
+    // Verify GET /events/active returns this live predicted event
+    const activeRes = await fetch(`${baseUrl}/events/active`);
+    const activeEvent = (await activeRes.json()) as HazardEvent;
+    expect(activeEvent.severity).toBe("red");
+
+    // Verify audit log has the source_received entry
+    const timelineRes = await fetch(`${baseUrl}/events/active/timeline`);
+    const timelineData = (await timelineRes.json()) as { timeline: AuditEntry[] };
+    const latest = timelineData.timeline[timelineData.timeline.length - 1];
+    expect(latest.eventType).toBe("source_received");
+    expect(latest.description).toContain("Live Prithvi-100M ViT flood prediction");
+  });
+
   it("GET /events/active returns active flood demo event with Prithvi extent", async () => {
     const res = await fetch(`${baseUrl}/events/active`);
     expect(res.status).toBe(200);

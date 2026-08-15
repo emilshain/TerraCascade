@@ -4,9 +4,49 @@ import { actionService } from "../services/action-service.js";
 import { impactService } from "../services/impact-service.js";
 import { timelineService } from "../services/timeline-service.js";
 import { alertService } from "../services/alert-service.js";
+import { modelClient } from "../services/model-client.js";
 import type { EapSeverity } from "../types/index.js";
 
 const router = Router();
+
+/**
+ * GET /events/model-status
+ * Check connection and health of the Dockerized Prithvi model service
+ */
+router.get("/model-status", async (_req, res) => {
+  const status = await modelClient.getStatus();
+  res.json(status);
+});
+
+/**
+ * POST /events/live-predict
+ * Trigger live flood prediction from the Docker model service,
+ * update active event, and register timeline audit entry
+ */
+router.post("/live-predict", async (req, res, next) => {
+  try {
+    const { discharge_cumecs, rainfall_mm_hr, scene_id, scenario, actorRole } = req.body || {};
+    
+    const result = await eventService.triggerLivePrediction(
+      {
+        discharge_cumecs: discharge_cumecs ? parseFloat(discharge_cumecs) : undefined,
+        rainfall_mm_hr: rainfall_mm_hr ? parseFloat(rainfall_mm_hr) : undefined,
+        scene_id,
+        scenario,
+      },
+      actorRole || "kseb_epm"
+    );
+
+    res.json({
+      message: "Live flood inference executed successfully.",
+      event: result.event,
+      fromDockerModel: result.fromDockerModel,
+      latencyMs: result.latencyMs,
+    });
+  } catch (err) {
+    next(err);
+  }
+});
 
 /**
  * GET /events/active

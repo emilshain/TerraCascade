@@ -33,6 +33,8 @@ export interface HazardEvent {
     sourceDetail?: HazardSourceDetail;
     protocolSource?: ProtocolCitation;
     floodExtentGeoJson?: FeatureCollection;
+    provenance?: any;
+    metrics?: any;
 }
 export type ActionStatus = "drafted" | "awaiting_approval" | "pending_approval" | "approved" | "acknowledged" | "in_progress" | "completed" | "complete" | "overridden";
 export declare const CANONICAL_ACTION_STATUS_ORDER: ActionStatus[];

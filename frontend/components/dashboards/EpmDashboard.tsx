@@ -1,24 +1,25 @@
 "use client";
 
 import { useDemoStore } from "@/lib/store/demo-store";
-import { HAZARD_EVENTS } from "@/lib/fixtures/hazard";
 import { HazardSummaryCard } from "@/components/overview/HazardSummaryCard";
 import { ActionStats } from "@/components/overview/ActionStats";
 import { AttentionActionsList } from "@/components/overview/AttentionActionsList";
 import { ActionCard } from "@/components/actions/ActionCard";
+import { LiveModelTrigger } from "@/components/shared/LiveModelTrigger";
 
 export function EpmDashboard() {
-  const { eapState, actions, role, advanceAction, overrideAction } = useDemoStore();
-  const hazard = HAZARD_EVENTS[eapState];
+  const { eapState, actions, role, advanceAction, overrideAction, activeHazard } = useDemoStore();
   const stateActions = actions.filter((a) => a.eapState === eapState);
 
   return (
     <div className="flex flex-col gap-6">
+      <LiveModelTrigger />
+
       <div>
         <p className="mb-2 text-xs font-extrabold uppercase tracking-wide text-gray-400">
-          Active EAP state
+          Active EAP incident & prediction
         </p>
-        <HazardSummaryCard hazard={hazard} />
+        <HazardSummaryCard hazard={activeHazard} />
       </div>
 
       <ActionStats actions={stateActions} />

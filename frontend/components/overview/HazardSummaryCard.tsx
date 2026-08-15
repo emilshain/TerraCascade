@@ -5,12 +5,7 @@ import { SeverityBadge } from "@/components/shared/SeverityBadge";
 import { ProvenanceTag } from "@/components/shared/ProvenanceTag";
 import { ProtocolDrawer } from "@/components/shared/ProtocolDrawer";
 
-function formatTimestamp(iso: string) {
-  return new Date(iso).toLocaleString("en-IN", {
-    dateStyle: "medium",
-    timeStyle: "short",
-  });
-}
+import { formatTimestamp } from "@/lib/formatters";
 
 export function HazardSummaryCard({ hazard }: { hazard: HazardEvent }) {
   const tint = hazard.eapState === "red" ? "red" : hazard.eapState === "orange" ? "orange" : "blue";

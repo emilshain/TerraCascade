@@ -91,6 +91,9 @@ function buildPopup(asset: MapAsset): HTMLElement {
   return root;
 }
 
+const MAPTILER_KEY = process.env.NEXT_PUBLIC_MAPTILER_KEY || "b3THaaLrWEMMfuhPxmEF";
+const MAPTILER_HYBRID_URL = `https://api.maptiler.com/maps/hybrid-v4/{z}/{x}/{y}.jpg?key=${MAPTILER_KEY}`;
+
 export function ImpactMapClient({
   hazard,
   assets,
@@ -109,11 +112,21 @@ export function ImpactMapClient({
     const map = L.map(containerRef.current, {
       center,
       zoom: 12,
-      minZoom: 10,
-      maxZoom: 16,
+      minZoom: 9,
+      maxZoom: 18,
       zoomControl: true,
-      attributionControl: false,
+      attributionControl: true,
     });
+
+    L.tileLayer(MAPTILER_HYBRID_URL, {
+      attribution:
+        '<a href="https://www.maptiler.com/copyright/" target="_blank" rel="noopener noreferrer">&copy; MapTiler</a> <a href="https://www.openstreetmap.org/copyright" target="_blank" rel="noopener noreferrer">&copy; OSM</a>',
+      tileSize: 512,
+      zoomOffset: -1,
+      maxZoom: 18,
+      crossOrigin: true,
+    }).addTo(map);
+
     mapRef.current = map;
     layerGroupRef.current = L.layerGroup().addTo(map);
 

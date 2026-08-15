@@ -25,9 +25,7 @@ function actorLabel(actorRole: AuditEntry["actorRole"]) {
   return ROLES.find((r) => r.id === actorRole)?.shortLabel ?? actorRole;
 }
 
-function formatTimestamp(iso: string) {
-  return new Date(iso).toLocaleString("en-IN", { dateStyle: "medium", timeStyle: "short" });
-}
+import { formatTimestamp } from "@/lib/formatters";
 
 export function AuditEntryRow({ entry }: { entry: AuditEntry }) {
   const Icon = EVENT_ICON[entry.eventType];

@@ -111,9 +111,10 @@ const BRIDGE_DEFS: BridgeDef[] = [
   },
 ];
 
-export function buildBridges(eapState: EapState): MapAsset[] {
+export function buildBridges(eapState?: EapState): MapAsset[] {
+  const safeState = eapState === "red" || eapState === "blue" ? eapState : "orange";
   return BRIDGE_DEFS.map((def) => {
-    const s = def.byState[eapState];
+    const s = def.byState[safeState] || def.byState["orange"];
     return {
       id: def.id,
       type: "bridge",
@@ -228,4 +229,11 @@ export const INITIAL_ROADS: MapAsset[] = [
     rationale:
       "Modeled alternate supply/evacuation route if the bridge segment is blocked; adds an estimated ~40 minutes, not measured.",
   },
+];
+
+export const MAP_ASSETS: MapAsset[] = [
+  ...CRITICAL_ASSETS,
+  ...buildBridges("orange"),
+  ...buildShelters({}),
+  ...INITIAL_ROADS,
 ];

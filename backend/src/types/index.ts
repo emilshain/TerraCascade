@@ -38,6 +38,8 @@ export interface HazardEvent {
   sourceDetail?: HazardSourceDetail;
   protocolSource?: ProtocolCitation;
   floodExtentGeoJson?: FeatureCollection;
+  provenance?: any;
+  metrics?: any;
 }
 
 export type ActionStatus =

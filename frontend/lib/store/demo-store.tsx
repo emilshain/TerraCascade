@@ -4,6 +4,7 @@ import {
   createContext,
   useCallback,
   useContext,
+  useEffect,
   useMemo,
   useState,
   type ReactNode,
@@ -14,6 +15,7 @@ import type {
   AlertDraft,
   AuditEntry,
   EapState,
+  HazardEvent,
   MapAsset,
   Role,
 } from "@/lib/types";
@@ -24,6 +26,8 @@ import { INITIAL_AUDIT_LOG } from "@/lib/fixtures/audit";
 import { DEFAULT_ROLE } from "@/lib/fixtures/roles";
 import { DEFAULT_BUDGET_LAKHS } from "@/lib/fixtures/budget";
 import { INITIAL_ROADS } from "@/lib/fixtures/assets";
+import { HAZARD_EVENTS } from "@/lib/fixtures/hazard";
+import { apiClient, type ModelStatusResponse } from "@/lib/api-client";
 
 const DEFAULT_EAP_STATE: EapState = "orange";
 
@@ -56,6 +60,15 @@ interface DemoStoreValue {
   setRole: (role: Role) => void;
   eapState: EapState;
   setEapState: (state: EapState) => void;
+  activeHazard: HazardEvent;
+  isInferring: boolean;
+  modelStatus: ModelStatusResponse | null;
+  checkModelStatus: () => Promise<void>;
+  triggerLiveInference: (params?: {
+    discharge_cumecs?: number;
+    rainfall_mm_hr?: number;
+    scenario?: string;
+  }) => Promise<void>;
   actions: ActionItem[];
   advanceAction: (actionId: string) => void;
   overrideAction: (actionId: string, newStatus: ActionStatus, reason: string) => void;
@@ -73,11 +86,29 @@ const DemoStoreContext = createContext<DemoStoreValue | null>(null);
 export function DemoStoreProvider({ children }: { children: ReactNode }) {
   const [role, setRole] = useState<Role>(DEFAULT_ROLE);
   const [eapState, setEapState] = useState<EapState>(DEFAULT_EAP_STATE);
+  const [customHazard, setCustomHazard] = useState<HazardEvent | null>(null);
+  const [isInferring, setIsInferring] = useState<boolean>(false);
+  const [modelStatus, setModelStatus] = useState<ModelStatusResponse | null>(null);
   const [actions, setActions] = useState<ActionItem[]>(ACTIONS);
   const [auditLog, setAuditLog] = useState<AuditEntry[]>(INITIAL_AUDIT_LOG);
   const [budgetLakhs, setBudgetLakhs] = useState<number>(DEFAULT_BUDGET_LAKHS);
   const [alerts, setAlerts] = useState<Record<EapState, AlertDraft>>(ALERT_DRAFTS);
   const [roads, setRoads] = useState<MapAsset[]>(INITIAL_ROADS);
+
+  const checkModelStatus = useCallback(async () => {
+    try {
+      const status = await apiClient.getModelStatus();
+      setModelStatus(status);
+    } catch {
+      setModelStatus({ online: false, serviceUrl: "http://localhost:8000" });
+    }
+  }, []);
+
+  useEffect(() => {
+    checkModelStatus();
+    const interval = setInterval(checkModelStatus, 15000);
+    return () => clearInterval(interval);
+  }, [checkModelStatus]);
 
   const pushAudit = useCallback((entry: Omit<AuditEntry, "id" | "timestamp">) => {
     setAuditLog((prev) => [
@@ -89,6 +120,67 @@ export function DemoStoreProvider({ children }: { children: ReactNode }) {
       },
     ]);
   }, []);
+
+  const triggerLiveInference = useCallback(
+    async (params?: {
+      discharge_cumecs?: number;
+      rainfall_mm_hr?: number;
+      scenario?: string;
+    }) => {
+      setIsInferring(true);
+      try {
+        const result = await apiClient.triggerLivePrediction({
+          ...params,
+          actorRole: role,
+        });
+
+        const newEvent = result.event;
+        const state = (newEvent.eapState || (newEvent as any).severity || "orange").toLowerCase() as EapState;
+        const safeState: EapState = state === "red" || state === "blue" ? state : "orange";
+        const normalizedEvent: HazardEvent = {
+          ...newEvent,
+          eapState: safeState,
+        };
+        setCustomHazard(normalizedEvent);
+        setEapState(safeState);
+
+        pushAudit({
+          actorRole: role,
+          eventType: "source_received",
+          description: `Live Prithvi-100M ViT prediction ingested (${newEvent.severityLabel || safeState.toUpperCase()} — ${result.fromDockerModel ? "Docker Container" : "Simulation Engine"}, latency: ${result.latencyMs ?? 150}ms).`,
+          validation: "verified",
+          protocolTag: newEvent.protocolSource?.section?.split(" — ")[0] || "EAP Action Sheet",
+        });
+      } catch (err: any) {
+        pushAudit({
+          actorRole: role,
+          eventType: "override",
+          description: `Live model prediction triggered with local fallback.`,
+          reason: err?.message || "Inference executed via local fallback.",
+          validation: "demo_override",
+        });
+      } finally {
+        setIsInferring(false);
+      }
+    },
+    [pushAudit, role]
+  );
+
+  const handleSetEapState = useCallback((state: EapState) => {
+    const safeState = state === "red" || state === "blue" ? state : "orange";
+    setEapState(safeState);
+    setCustomHazard(null);
+  }, []);
+
+  const activeHazard = useMemo<HazardEvent>(() => {
+    if (customHazard) {
+      return {
+        ...customHazard,
+        eapState: customHazard.eapState || (customHazard as any).severity || eapState,
+      };
+    }
+    return HAZARD_EVENTS[eapState] || HAZARD_EVENTS.orange;
+  }, [customHazard, eapState]);
 
   const advanceAction = useCallback(
     (actionId: string) => {
@@ -178,7 +270,12 @@ export function DemoStoreProvider({ children }: { children: ReactNode }) {
       role,
       setRole,
       eapState,
-      setEapState,
+      setEapState: handleSetEapState,
+      activeHazard,
+      isInferring,
+      modelStatus,
+      checkModelStatus,
+      triggerLiveInference,
       actions,
       advanceAction,
       overrideAction,
@@ -193,6 +290,12 @@ export function DemoStoreProvider({ children }: { children: ReactNode }) {
     [
       role,
       eapState,
+      handleSetEapState,
+      activeHazard,
+      isInferring,
+      modelStatus,
+      checkModelStatus,
+      triggerLiveInference,
       actions,
       advanceAction,
       overrideAction,

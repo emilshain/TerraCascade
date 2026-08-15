@@ -1,0 +1,49 @@
+services:
+  model-service:
+    build:
+      context: ./model-service
+      dockerfile: Dockerfile
+    container_name: terracascade-model-service
+    ports:
+      - "8000:8000"
+    environment:
+      - PORT=8000
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8000/health"]
+      interval: 15s
+      timeout: 5s
+      retries: 3
+
+  backend:
+    build:
+      context: ./backend
+      dockerfile: Dockerfile
+    container_name: terracascade-backend
+    ports:
+      - "4000:4000"
+    environment:
+      - PORT=4000
+      - MODEL_SERVICE_URL=http://model-service:8000
+    depends_on:
+      model-service:
+        condition: service_healthy
+    restart: unless-stopped
+
+  frontend:
+    build:
+      context: ./frontend
+      dockerfile: Dockerfile
+      args:
+        - NEXT_PUBLIC_API_URL=http://localhost:4000
+        - NEXT_PUBLIC_MAPTILER_KEY=b3THaaLrWEMMfuhPxmEF
+    container_name: terracascade-frontend
+    ports:
+      - "3000:3000"
+    environment:
+      - PORT=3000
+      - NEXT_PUBLIC_API_URL=http://localhost:4000
+      - NEXT_PUBLIC_MAPTILER_KEY=b3THaaLrWEMMfuhPxmEF
+    depends_on:
+      - backend
+    restart: unless-stopped
