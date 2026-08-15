@@ -11,15 +11,8 @@ export function Sidebar() {
   return (
     <aside className="hidden fixed left-4 top-4 bottom-4 w-64 flex-col rounded-3xl border border-gray-100 bg-white/70 backdrop-blur-xl shadow-lg lg:flex lg:flex-col">
       <div className="flex items-center gap-2 px-6 py-6">
-        <div className="flex h-9 w-9 items-center justify-center rounded-2xl bg-blue-600 text-sm font-black text-white">
-          TC
-        </div>
-        <div>
-          <p className="brand-font text-sm text-gray-900">TerraCascade</p>
-          <p className="text-[11px] font-semibold uppercase tracking-wide text-gray-400">
-            EAP Command
-          </p>
-        </div>
+        <img src="/logo.svg" alt="TerraCascade" className="h-9 w-9" />
+        <p className="brand-font text-lg font-bold text-gray-900">TerraCascade</p>
       </div>
       <nav className="flex flex-1 flex-col gap-1 px-3">
         {NAV_ITEMS.map((item) => {

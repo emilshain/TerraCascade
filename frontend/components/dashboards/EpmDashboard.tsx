@@ -9,7 +9,13 @@ import { LiveModelTrigger } from "@/components/shared/LiveModelTrigger";
 
 export function EpmDashboard() {
   const { eapState, actions, role, advanceAction, overrideAction, activeHazard } = useDemoStore();
-  const stateActions = actions.filter((a) => a.eapState === eapState);
+  const stateActions = actions
+    .filter((a) => a.eapState === eapState)
+    .sort((a, b) => {
+      if (a.status === "complete" && b.status !== "complete") return 1;
+      if (a.status !== "complete" && b.status === "complete") return -1;
+      return 0;
+    });
 
   return (
     <div className="flex flex-col gap-6">

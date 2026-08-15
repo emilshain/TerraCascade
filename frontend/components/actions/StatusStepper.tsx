@@ -12,6 +12,7 @@ const STAGE_LABEL: Record<ActionStatus, string> = {
 
 export function StatusStepper({ status }: { status: ActionStatus }) {
   const currentIdx = ACTION_STATUS_ORDER.indexOf(status);
+  const isComplete = status === "complete";
 
   return (
     <ol className="flex items-center gap-1">
@@ -24,12 +25,12 @@ export function StatusStepper({ status }: { status: ActionStatus }) {
               <div
                 className={cn(
                   "flex h-6 w-6 items-center justify-center rounded-full text-[10px] font-black",
-                  done && "bg-emerald-500 text-white",
-                  active && "bg-blue-600 text-white ring-4 ring-blue-100",
-                  !done && !active && "bg-gray-200 text-gray-500"
+                  (done || isComplete) && "bg-emerald-500 text-white",
+                  active && !isComplete && "bg-blue-600 text-white ring-4 ring-blue-100",
+                  !done && !active && !isComplete && "bg-gray-200 text-gray-500"
                 )}
               >
-                {done ? <Check className="h-3 w-3" aria-hidden /> : idx + 1}
+                {done || isComplete ? <Check className="h-3 w-3" aria-hidden /> : idx + 1}
               </div>
               <span
                 className={cn(

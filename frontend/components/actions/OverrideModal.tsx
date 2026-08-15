@@ -1,6 +1,7 @@
 "use client";
 
 import { useState } from "react";
+import { createPortal } from "react-dom";
 import { X } from "lucide-react";
 import { ACTION_STATUS_ORDER, type ActionItem, type ActionStatus } from "@/lib/types";
 
@@ -24,9 +25,10 @@ export function OverrideModal({
   const [newStatus, setNewStatus] = useState<ActionStatus>(action.status);
   const [reason, setReason] = useState("");
 
-  return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/40 px-4" role="dialog" aria-modal>
-      <div className="glass-card w-full max-w-md rounded-3xl p-6">
+  return createPortal(
+    <div className="fixed inset-0 z-50 flex items-center justify-center px-4 backdrop-blur-sm" role="dialog" aria-modal>
+      <div className="absolute inset-0 bg-black/40"></div>
+      <div className="glass-card relative w-full max-w-md rounded-3xl p-6 bg-white/95">
         <div className="flex items-start justify-between gap-3">
           <div>
             <p className="text-xs font-bold uppercase tracking-wide text-red-600">EAP Protocol Deviation</p>
@@ -91,6 +93,7 @@ export function OverrideModal({
           </div>
         </form>
       </div>
-    </div>
+    </div>,
+    document.body
   );
 }

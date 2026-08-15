@@ -15,9 +15,9 @@ const geistMono = Geist_Mono({
 });
 
 export const metadata: Metadata = {
-  title: "TerraCascade — EAP Command",
+  title: "TerraCascade",
   description:
-    "TerraCascade EAP Command — incident-command demo for the Idamalayar flood EAP. Verified-demo fixture data only; no live feed.",
+    "TerraCascade — incident-command demo for the Idamalayar flood EAP. Verified-demo fixture data only; no live feed.",
 };
 
 export default function RootLayout({ children }: LayoutProps<"/">) {
