@@ -33,7 +33,7 @@ export function ActionStats({ actions }: { actions: ActionItem[] }) {
 
   return (
     <div className="grid grid-cols-1 gap-4 sm:grid-cols-3">
-      {tiles.map((tile) => {
+      {tiles.map((tile, idx) => {
         const Icon = tile.icon;
         return (
           <GlassCard
@@ -41,9 +41,10 @@ export function ActionStats({ actions }: { actions: ActionItem[] }) {
             tint={tile.tint}
             className={
               tile.emphasize
-                ? "glow-red border-2 !border-red-300 flex items-center gap-4"
-                : "flex items-center gap-4"
+                ? "glow-red border-2 !border-red-300 flex items-center gap-4 stagger-item"
+                : "flex items-center gap-4 stagger-item"
             }
+            style={{ animationDelay: `${idx * 0.1}s` } as any}
           >
             <div className="flex h-11 w-11 items-center justify-center rounded-2xl bg-white/70">
               <Icon className="h-5 w-5" aria-hidden />

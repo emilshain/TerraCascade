@@ -245,7 +245,7 @@
     backdrop-filter: blur(var(--glass-blur)) saturate(210%);
     border: 1px solid var(--glass-border);
     box-shadow: var(--glass-shadow);
-    @apply w-full rounded-2xl px-6 py-4 text-[15px] font-bold text-gray-900 placeholder:text-gray-400 focus:outline-none focus:border-blue-500/30 focus:ring-4 focus:ring-blue-500/5 transition-all;
+    @apply w-full rounded-2xl px-6 py-4 text-[15px] font-bold text-gray-900 placeholder:text-gray-400 focus:outline-none focus:border-blue-500/30 focus:ring-4 focus:ring-blue-500/5 transition-all focus:scale-[1.02];
   }
 
   .glass-select {
@@ -299,6 +299,199 @@
   0%, 100% { opacity: 1; }
   50% { opacity: .5; }
 }
+
+@keyframes fadeIn {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+@keyframes slideInUp {
+  from {
+    opacity: 0;
+    transform: translateY(16px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes slideInDown {
+  from {
+    opacity: 0;
+    transform: translateY(-16px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes slideInLeft {
+  from {
+    opacity: 0;
+    transform: translateX(-16px);
+  }
+  to {
+    opacity: 1;
+    transform: translateX(0);
+  }
+}
+
+@keyframes slideInRight {
+  from {
+    opacity: 0;
+    transform: translateX(16px);
+  }
+  to {
+    opacity: 1;
+    transform: translateX(0);
+  }
+}
+
+@keyframes scaleIn {
+  from {
+    opacity: 0;
+    transform: scale(0.95);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+
+@keyframes popIn {
+  0% {
+    opacity: 0;
+    transform: scale(0.85);
+  }
+  75% {
+    transform: scale(1.05);
+  }
+  100% {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+
+.animate-fade-in {
+  animation: fadeIn 0.5s ease-out;
+}
+
+.animate-slide-up {
+  animation: slideInUp 0.5s ease-out;
+}
+
+.animate-slide-down {
+  animation: slideInDown 0.5s ease-out;
+}
+
+.animate-slide-left {
+  animation: slideInLeft 0.5s ease-out;
+}
+
+.animate-slide-right {
+  animation: slideInRight 0.5s ease-out;
+}
+
+.animate-scale-in {
+  animation: scaleIn 0.4s ease-out;
+}
+
+.animate-pop-in {
+  animation: popIn 0.5s cubic-bezier(0.34, 1.56, 0.64, 1);
+}
+
+.hover-lift {
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.hover-lift:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 12px 24px rgba(0, 0, 0, 0.15);
+}
+
+.hover-scale {
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.hover-scale:hover {
+  transform: scale(1.05);
+}
+
+.hover-glow {
+  transition: all 0.3s ease-out;
+}
+
+.hover-glow:hover {
+  filter: brightness(1.1) drop-shadow(0 0 8px rgba(31, 99, 245, 0.4));
+}
+
+.hover-bright {
+  transition: all 0.3s ease-out;
+}
+
+.hover-bright:hover {
+  filter: brightness(1.08);
+}
+
+.stagger-item {
+  animation: slideInUp 0.5s ease-out backwards;
+}
+
+.stagger-item:nth-child(1) { animation-delay: 0.05s; }
+.stagger-item:nth-child(2) { animation-delay: 0.1s; }
+.stagger-item:nth-child(3) { animation-delay: 0.15s; }
+.stagger-item:nth-child(4) { animation-delay: 0.2s; }
+.stagger-item:nth-child(5) { animation-delay: 0.25s; }
+.stagger-item:nth-child(n+6) { animation-delay: 0.3s; }
+
+.group-hover\:translate-y-spin:hover {
+  animation: none;
+}
+
+a, [role="button"] {
+  transition: all 0.3s ease-out;
+}
+
+input[type="range"] {
+  cursor: pointer;
+}
+
+input[type="range"]:hover {
+  filter: brightness(1.05);
+}
+
+select, textarea {
+  transition: all 0.3s ease-out;
+}
+
+select:focus, textarea:focus {
+  transform: scale(1.01);
+}
+
+.animate-on-scroll {
+  opacity: 0;
+  transform: translateY(20px);
+  animation: slideInUp 0.6s ease-out forwards;
+}
+
+.list-group {
+  display: flex;
+  flex-direction: column;
+  gap: inherit;
+}
+
+.list-group > * {
+  animation: slideInUp 0.5s ease-out backwards;
+}
+
+.list-group > :nth-child(1) { animation-delay: 0.05s; }
+.list-group > :nth-child(2) { animation-delay: 0.1s; }
+.list-group > :nth-child(3) { animation-delay: 0.15s; }
+.list-group > :nth-child(4) { animation-delay: 0.2s; }
+.list-group > :nth-child(5) { animation-delay: 0.25s; }
+.list-group > :nth-child(n+6) { animation-delay: 0.3s; }
 
 .map-container {
   width: 100%;

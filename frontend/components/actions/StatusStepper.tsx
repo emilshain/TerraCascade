@@ -24,11 +24,12 @@ export function StatusStepper({ status }: { status: ActionStatus }) {
             <div className="flex flex-col items-center gap-1">
               <div
                 className={cn(
-                  "flex h-6 w-6 items-center justify-center rounded-full text-[10px] font-black",
-                  (done || isComplete) && "bg-emerald-500 text-white",
-                  active && !isComplete && "bg-blue-600 text-white ring-4 ring-blue-100",
-                  !done && !active && !isComplete && "bg-gray-200 text-gray-500"
+                  "flex h-6 w-6 items-center justify-center rounded-full text-[10px] font-black transition-all",
+                  (done || isComplete) && "bg-emerald-500 text-white scale-100",
+                  active && !isComplete && "bg-blue-600 text-white ring-4 ring-blue-100 scale-110",
+                  !done && !active && !isComplete && "bg-gray-200 text-gray-500 hover:bg-gray-300"
                 )}
+                style={{ animationDelay: `${idx * 0.05}s` } as any}
               >
                 {done || isComplete ? <Check className="h-3 w-3" aria-hidden /> : idx + 1}
               </div>

@@ -14,7 +14,7 @@ export function StatusBadge({ status, className }: { status: ActionStatus; class
   return (
     <span
       className={cn(
-        "inline-flex items-center rounded-full px-3 py-1 text-[11px] font-extrabold uppercase tracking-wide whitespace-nowrap",
+        "inline-flex items-center rounded-full px-3 py-1 text-[11px] font-extrabold uppercase tracking-wide whitespace-nowrap transition-all hover-scale",
         style.className,
         className
       )}

@@ -26,14 +26,14 @@ export function HazardSummaryCard({ hazard }: { hazard: HazardEvent }) {
       </div>
 
       <dl className="grid grid-cols-1 gap-3 sm:grid-cols-3">
-        <div className="rounded-2xl bg-white/60 px-4 py-3">
+        <div className="rounded-2xl bg-white/60 px-4 py-3 stagger-item transition-all hover:bg-white/80 hover:shadow-sm">
           <dt className="flex items-center gap-1.5 text-[11px] font-bold uppercase tracking-wide text-gray-400">
             <Clock className="h-3.5 w-3.5" aria-hidden />
             Received
           </dt>
           <dd className="mt-1 text-sm font-bold text-gray-800">{formatTimestamp(hazard.timestampReceived)}</dd>
         </div>
-        <div className="rounded-2xl bg-white/60 px-4 py-3">
+        <div className="rounded-2xl bg-white/60 px-4 py-3 stagger-item transition-all hover:bg-white/80 hover:shadow-sm" style={{ animationDelay: '0.1s' } as any}>
           <dt className="flex items-center gap-1.5 text-[11px] font-bold uppercase tracking-wide text-gray-400">
             <Gauge className="h-3.5 w-3.5" aria-hidden />
             Confidence
@@ -42,7 +42,7 @@ export function HazardSummaryCard({ hazard }: { hazard: HazardEvent }) {
             {Math.round(hazard.confidence * 100)}% — {hazard.confidenceLabel}
           </dd>
         </div>
-        <div className="rounded-2xl bg-white/60 px-4 py-3">
+        <div className="rounded-2xl bg-white/60 px-4 py-3 stagger-item transition-all hover:bg-white/80 hover:shadow-sm" style={{ animationDelay: '0.15s' } as any}>
           <dt className="flex items-center gap-1.5 text-[11px] font-bold uppercase tracking-wide text-gray-400">
             <AlertTriangle className="h-3.5 w-3.5" aria-hidden />
             Status

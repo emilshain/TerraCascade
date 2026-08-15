@@ -24,7 +24,8 @@ export function AttentionActionsList({ actions }: { actions: ActionItem[] }) {
         {flagged.map((action) => (
           <li
             key={action.id}
-            className="flex flex-wrap items-center justify-between gap-2 rounded-2xl bg-white/60 px-4 py-3"
+            onClick={() => document.getElementById(`action-${action.id}`)?.scrollIntoView({ behavior: 'smooth', block: 'start' })}
+            className="stagger-item cursor-pointer flex flex-wrap items-center justify-between gap-2 rounded-2xl bg-white/60 px-4 py-3 transition-all hover:bg-white hover:shadow-lg hover:-translate-y-0.5"
           >
             <div className="min-w-0">
               <p className="truncate text-sm font-bold text-gray-800">{action.title}</p>
