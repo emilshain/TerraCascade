@@ -217,7 +217,7 @@
     -webkit-backdrop-filter: blur(20px);
   }
 
-  .glass-blue { background: rgba(37, 99, 235, 0.12); color: #1f63f5; }
+  .glass-blue { background: rgba(31, 99, 245, 0.12); color: #1f63f5; }
   .glass-red { background: rgba(239, 68, 68, 0.12); color: #b91c1c; }
   .glass-amber { background: rgba(245, 158, 11, 0.12); color: #b45309; }
   .glass-orange { background: rgba(249, 115, 22, 0.12); color: #c2410c; }
@@ -225,7 +225,7 @@
 
   .glass-tint-red { background: rgba(239, 68, 68, 0.15) !important; backdrop-filter: blur(12px) !important; }
   .glass-tint-orange { background: rgba(249, 115, 22, 0.15) !important; backdrop-filter: blur(12px) !important; }
-  .glass-tint-blue { background: rgba(37, 99, 235, 0.15) !important; backdrop-filter: blur(12px) !important; }
+  .glass-tint-blue { background: rgba(31, 99, 245, 0.15) !important; backdrop-filter: blur(12px) !important; }
   .glass-tint-emerald { background: rgba(16, 185, 129, 0.15) !important; backdrop-filter: blur(12px) !important; }
 
   .glow-red {
@@ -237,7 +237,7 @@
   }
 
   .glow-primary {
-    box-shadow: 0 0 25px rgba(37, 99, 235, 0.15);
+    box-shadow: 0 0 25px rgba(31, 99, 245, 0.15);
   }
 
   .glass-input {
@@ -257,9 +257,9 @@
   }
 
   .glass-select-compact {
-    background: rgba(37, 99, 235, 0.05);
+    background: rgba(31, 99, 245, 0.05);
     backdrop-filter: blur(var(--glass-blur)) saturate(210%);
-    border: 1px solid rgba(37, 99, 235, 0.1);
+    border: 1px solid rgba(31, 99, 245, 0.1);
     @apply rounded-xl px-4 py-2 text-[15px] font-black text-blue-700 focus:outline-none focus:border-blue-500/30 focus:ring-4 focus:ring-blue-500/5 transition-all appearance-none cursor-pointer;
   }
 
@@ -285,7 +285,7 @@
   .glass-pill .glass-select-compact {
     position: relative;
     z-index: 1;
-    background: rgba(37, 99, 235, 0.08) !important;
+    background: rgba(31, 99, 245, 0.08) !important;
     backdrop-filter: none !important;
     -webkit-backdrop-filter: none !important;
   }
@@ -500,7 +500,7 @@ select:focus, textarea:focus {
 
 .custom-scrollbar {
   scrollbar-width: thin;
-  scrollbar-color: rgba(37, 99, 235, 0.35) rgba(15, 23, 42, 0.06);
+  scrollbar-color: rgba(31, 99, 245, 0.35) rgba(15, 23, 42, 0.06);
   scrollbar-gutter: auto;
 }
 
@@ -515,14 +515,14 @@ select:focus, textarea:focus {
 }
 
 .custom-scrollbar::-webkit-scrollbar-thumb {
-  background: rgba(37, 99, 235, 0.35);
+  background: rgba(31, 99, 245, 0.35);
   border-radius: 9999px;
   border: 3px solid transparent;
   background-clip: padding-box;
 }
 
 .custom-scrollbar::-webkit-scrollbar-thumb:hover {
-  background: rgba(37, 99, 235, 0.55);
+  background: rgba(31, 99, 245, 0.55);
   background-clip: padding-box;
 }
 
@@ -695,8 +695,8 @@ select:focus, textarea:focus {
 .leaflet-control-zoom-in:hover,
 .leaflet-control-zoom-out:hover {
   background: rgba(255, 255, 255, 0.65) !important;
-  border-color: rgba(37, 99, 235, 0.3) !important;
-  color: #2563eb !important;
+  border-color: rgba(31, 99, 245, 0.3) !important;
+  color: #1f63f5 !important;
   transform: translateY(-2px);
 }
 

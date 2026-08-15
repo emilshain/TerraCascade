@@ -20,9 +20,9 @@ export function SeverityBadge({ state, className }: { state: EapState; className
       <span
         className={cn(
           "h-1.5 w-1.5 rounded-full",
-          state === "blue" && "bg-blue-600",
-          state === "orange" && "bg-orange-600 animate-pulse-slow",
-          state === "red" && "bg-red-600 animate-pulse-slow"
+          state === "blue" && "bg-blue-500",
+          state === "orange" && "bg-orange-500 animate-pulse-slow",
+          state === "red" && "bg-red-500 animate-pulse-slow"
         )}
       />
       {style.label}
