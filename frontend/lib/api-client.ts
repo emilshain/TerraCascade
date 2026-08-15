@@ -51,6 +51,7 @@ export interface LivePredictionResult {
   event: HazardEvent;
   fromDockerModel: boolean;
   latencyMs?: number;
+  smsResults?: any[];
 }
 
 export class TerraCascadeApiClient {

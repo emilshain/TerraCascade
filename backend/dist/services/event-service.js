@@ -4,6 +4,8 @@ exports.eventService = exports.EventService = void 0;
 const hazard_fixtures_js_1 = require("../fixtures/hazard-fixtures.js");
 const timeline_service_js_1 = require("./timeline-service.js");
 const model_client_js_1 = require("./model-client.js");
+const sms_service_js_1 = require("./sms-service.js");
+const env_js_1 = require("../config/env.js");
 class EventService {
     activeState = "orange";
     customLiveEvent = null;
@@ -89,10 +91,29 @@ class EventService {
                 ? "Docker Containerized Prithvi-100M-sen1floods11 ViT"
                 : "Local Fallback Inference Engine",
         });
+        // Automatically send SMS alert according to predicted severity level to target numbers
+        const severityTitle = liveEvent.severity === "red"
+            ? "RED ALERT - EXTREME FLOOD EMERGENCY"
+            : liveEvent.severity === "orange"
+                ? "ORANGE ALERT - CONTROLLED RELEASE WARNING"
+                : "BLUE ALERT - FLOOD WATCH MONITORING";
+        const affectedZonesText = liveEvent.affectedZones && liveEvent.affectedZones.length > 0
+            ? liveEvent.affectedZones.join(", ")
+            : "Idamalayar Bhoothathankettu Corridor";
+        const smsMessage = `[TerraCascade ${severityTitle}]\nPredicted Severity: ${liveEvent.severity.toUpperCase()}\nDischarge Rate: ${params.discharge_cumecs || 1200} cumecs\nRainfall: ${params.rainfall_mm_hr || 45} mm/hr\nAffected Zone: ${affectedZonesText}\nImmediate EAP action required.`;
+        const smsResults = await sms_service_js_1.smsService.dispatchAlertSms(smsMessage, env_js_1.ENV.ALERT_RECIPIENTS);
+        const successfulDispatches = smsResults.filter((r) => r.success);
+        timeline_service_js_1.timelineService.recordEvent({
+            actorRole,
+            eventType: "approval",
+            description: `Automated Twilio Flood Prediction SMS sent to ${env_js_1.ENV.ALERT_RECIPIENTS.join(", ")} for predicted ${liveEvent.severity.toUpperCase()} state. Delivered: ${successfulDispatches.length}/${smsResults.length}.`,
+            provenance: "Twilio REST API SMS Gateway",
+        });
         return {
             event: liveEvent,
             fromDockerModel,
             latencyMs: Date.now() - t0,
+            smsResults,
         };
     }
     getActiveState() {
