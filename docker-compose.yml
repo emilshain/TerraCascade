@@ -1,4 +1,18 @@
 services:
+  mongodb:
+    image: mongo:7.0
+    container_name: terracascade-mongodb
+    ports:
+      - "27017:27017"
+    volumes:
+      - mongo-data:/data/db
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD", "mongosh", "--eval", "db.adminCommand('ping')"]
+      interval: 10s
+      timeout: 5s
+      retries: 3
+
   model-service:
     build:
       context: ./model-service
@@ -25,9 +39,12 @@ services:
     environment:
       - PORT=4000
       - MODEL_SERVICE_URL=http://model-service:8000
+      - MONGODB_URI=mongodb://mongodb:27017/terracascade
     depends_on:
       model-service:
         condition: service_healthy
+      mongodb:
+        condition: service_started
     restart: unless-stopped
 
   frontend:
@@ -47,3 +64,8 @@ services:
     depends_on:
       - backend
     restart: unless-stopped
+
+volumes:
+  mongo-data:
+    driver: local
+

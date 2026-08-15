@@ -13,7 +13,9 @@ import type {
   MapAsset,
   CascadeNode,
   ResourcePool,
+  Role,
 } from "./types";
+
 import { HAZARD_EVENTS, buildHazardEvent } from "./fixtures/hazard";
 import { ACTIONS } from "./fixtures/actions";
 import { CASCADE_NODES, RESOURCE_POOLS } from "./fixtures/cascade";
@@ -255,7 +257,154 @@ export class TerraCascadeApiClient {
       };
     }
   }
+
+  // --- Auth & MongoDB Cluster Telemetry ---
+
+  public async getClusterStatus(): Promise<ClusterStatus> {
+    try {
+      const res = await fetch(`${this.baseUrl}/auth/cluster-status`);
+      if (!res.ok) throw new Error("Failed to fetch cluster status");
+      return await res.json();
+    } catch (err: any) {
+      return {
+        connected: false,
+        readyState: 0,
+        statusText: "Disconnected (Fallback Mode)",
+        isAtlas: false,
+        clusterHost: "localhost:27017",
+        dbName: "terracascade",
+        latencyMs: 0,
+        collections: [],
+        lastCheckedAt: new Date().toISOString(),
+        error: err.message || "Backend offline or cluster unreachable",
+      };
+    }
+  }
+
+  public async getDemoOfficers(): Promise<Array<{ name: string; email: string; role: Role; badgeId: string; agency: string }>> {
+    try {
+      const res = await fetch(`${this.baseUrl}/auth/demo-officers`);
+      if (!res.ok) throw new Error("Failed to load demo officers");
+      const data = await res.json();
+      return data.officers;
+    } catch {
+      return [
+        {
+          name: "Biju P.N",
+          email: "epm.biju@kseb.in",
+          role: "kseb_epm",
+          badgeId: "KSEB-EPM-04",
+          agency: "Kerala State Electricity Board (Dam Safety)",
+        },
+        {
+          name: "Salim M.",
+          email: "eoc.salim@kerala.gov.in",
+          role: "district_eoc",
+          badgeId: "DDMA-EOC-02",
+          agency: "District Emergency Operations Centre",
+        },
+        {
+          name: "Dr. Renu Raj, IAS",
+          email: "collector.ernakulam@kerala.gov.in",
+          role: "district_collector",
+          badgeId: "IAS-KL-COL-01",
+          agency: "District Administration & DDMA",
+        },
+        {
+          name: "Priya V.",
+          email: "planner.priya@kerala.gov.in",
+          role: "budget_planner",
+          badgeId: "KDMA-FIN-08",
+          agency: "Disaster Mitigation & Finance",
+        },
+      ];
+    }
+  }
+
+  public async login(identifier: string, password: string): Promise<{ user: SafeUser; token: string }> {
+    const res = await fetch(`${this.baseUrl}/auth/login`, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ identifier, password }),
+    });
+    const data = await res.json();
+    if (!res.ok) {
+      throw new Error(data.message || data.error || "Login failed");
+    }
+    return { user: data.user, token: data.token };
+  }
+
+  public async register(payload: {
+    name: string;
+    email: string;
+    password: string;
+    role: Role;
+    badgeId: string;
+    agency?: string;
+    phoneNumber?: string;
+  }): Promise<{ user: SafeUser; token: string }> {
+    const res = await fetch(`${this.baseUrl}/auth/register`, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify(payload),
+    });
+    const data = await res.json();
+    if (!res.ok) {
+      const msg = Array.isArray(data.details) ? data.details.join(", ") : data.message || data.error || "Registration failed";
+      throw new Error(msg);
+    }
+    return { user: data.user, token: data.token };
+  }
+
+  public async getMe(token: string): Promise<SafeUser | null> {
+    try {
+      const res = await fetch(`${this.baseUrl}/auth/me`, {
+        headers: { Authorization: `Bearer ${token}` },
+      });
+      if (!res.ok) return null;
+      return await res.json();
+    } catch {
+      return null;
+    }
+  }
+
+  public async seedDemoUsers(): Promise<{ message: string; createdCount: number }> {
+    try {
+      const res = await fetch(`${this.baseUrl}/auth/seed-demo`, { method: "POST" });
+      return await res.json();
+    } catch (err: any) {
+      return { message: err.message || "Failed to seed demo accounts", createdCount: 0 };
+    }
+  }
+}
+
+export interface SafeUser {
+  id: string;
+  name: string;
+  email: string;
+  role: Role;
+  badgeId: string;
+  agency: string;
+  phoneNumber?: string;
+  isVerified?: boolean;
+  lastLogin?: string;
+  createdAt?: string;
+}
+
+export interface ClusterStatus {
+  connected: boolean;
+  readyState: number;
+  statusText: string;
+  isAtlas: boolean;
+  clusterHost: string;
+  dbName: string;
+  latencyMs: number;
+  collections: string[];
+  userCount?: number;
+  lastCheckedAt: string;
+  error?: string | null;
 }
 
 export const apiClient = new TerraCascadeApiClient();
+
 

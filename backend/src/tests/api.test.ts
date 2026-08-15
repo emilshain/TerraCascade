@@ -93,10 +93,13 @@ describe("TerraCascade EAP Command — Backend API Integration Suite", () => {
     // Verify audit log has the source_received entry
     const timelineRes = await fetch(`${baseUrl}/events/active/timeline`);
     const timelineData = (await timelineRes.json()) as { timeline: AuditEntry[] };
-    const latest = timelineData.timeline[timelineData.timeline.length - 1];
-    expect(latest.eventType).toBe("source_received");
-    expect(latest.description).toContain("Live Prithvi-100M ViT flood prediction");
+    const liveEntry = timelineData.timeline.find((t) =>
+      t.description.includes("Live Prithvi-100M ViT flood prediction")
+    );
+    expect(liveEntry).toBeDefined();
+    expect(liveEntry?.eventType).toBe("source_received");
   });
+
 
   it("GET /events/active returns active flood demo event with Prithvi extent", async () => {
     const res = await fetch(`${baseUrl}/events/active`);

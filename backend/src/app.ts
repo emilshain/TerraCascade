@@ -6,6 +6,7 @@ import eventsRouter from "./routes/events.js";
 import actionsRouter from "./routes/actions.js";
 import portfolioRouter from "./routes/portfolio.js";
 import healthRouter from "./routes/health.js";
+import authRouter from "./routes/auth.js";
 
 export function createApp() {
   const app = express();
@@ -26,10 +27,12 @@ export function createApp() {
   app.use(requestLogger);
 
   // Routes
+  app.use("/auth", authRouter);
   app.use("/events", eventsRouter);
   app.use("/actions", actionsRouter);
   app.use("/portfolio", portfolioRouter);
   app.use("/", healthRouter);
+
 
   // Root Welcome Endpoint
   app.get("/", (_req, res) => {
